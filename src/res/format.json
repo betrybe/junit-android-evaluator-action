@@ -1,0 +1,13 @@
+{
+  "github_username": "katia.cunha",
+  "evaluations": [
+    {
+      "grade": 1,
+      "description": "1 - Verifica se o build foi executado com sucesso"
+    },
+    {
+      "grade": 3,
+      "description": "2 - Verifica se as dependencias foram inseridas corretamente"
+    }
+  ]
+}

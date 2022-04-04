@@ -1,0 +1,20 @@
+{
+  "name": "evaluator-junit-android",
+  "version": "1.0.0",
+  "description": "Avaliador automatico para projetos android junit",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "debug": "nodemon --inspect index.js",
+    "watch": "nodemon index.js",
+    "test": "jest"
+  },
+  "author": "Katia Cibele",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
+}

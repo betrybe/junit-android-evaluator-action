@@ -32,7 +32,7 @@ function runStepsEvaluator(path_xml) {
 
     core.setOutput(result, output);
   } catch(error) {
-    core.setFailed(`Action failed with error ${err}`);
+    core.setFailed(`Action failed with error ${error}`);
     core.error('This is a bad error. This will also fail the build.')
   }
 }

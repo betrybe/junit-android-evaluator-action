@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 const path = require("path");
-
+const core = require('@actions/core');
 
 /**
  * Retorna todos os arquivos xml's

@@ -20,7 +20,7 @@ const UNAPPROVED_GRADE = 1;
 function runStepsEvaluator(path_xml) {
   try {
     
-    core.info('Buscando arquivos xml gerados pelo gradle...')
+    core.info(`\u001b[48;5;6mBuscando arquivos xml gerados pelo gradle ${path_xml}`)
 
     const fileXml = searchFilesXml(path_xml)[0]
     const file = loadFile(`${path_xml}${fileXml}`);
@@ -32,8 +32,8 @@ function runStepsEvaluator(path_xml) {
 
     core.setOutput(result, output);
   } catch(error) {
-    core.setFailed(`Action failed with error ${error}`);
     core.error('This is a bad error. This will also fail the build.')
+    core.setFailed(`Action failed with error ${error}`);
   }
 }
 

@@ -19,6 +19,8 @@ function searchFilesXml(pathFiles) {
     files = files.filter((file) => path.extname(file) === ".xml")
     return files
   } catch (error) {
+    core.error(`\u001b[48;2;255;0;0❌ error -> ${error}`)
+
     throw new Error('Erro ao buscar por arquivos xml.')
   }
 }

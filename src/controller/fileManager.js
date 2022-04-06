@@ -14,6 +14,8 @@ function searchFilesXml(pathFiles) {
   let files
   try {
     files = fs.readdirSync(pathFiles)
+    core.info(`\u001b[48;5;6m📜 FILES -> ${files}`)
+
     files = files.filter((file) => path.extname(file) === ".xml")
     return files
   } catch (error) {

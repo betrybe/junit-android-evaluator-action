@@ -19,12 +19,17 @@ const UNAPPROVED_GRADE = 1;
  */
 function runStepsEvaluator(path_xml) {
   try {
+    
+    core.info('Buscando arquivos xml gerados pelo gradle...')
+
     const fileXml = searchFilesXml(path_xml)[0]
     const file = loadFile(`${path_xml}${fileXml}`);
     const obj = parserXmlToObject(file);
     const obj_mapped = mapValues(obj);
     const output = generateOuputJSON(obj_mapped.testcase);
-    
+
+    core.info(`🚀 Escrevendo saida -> ${output}`)
+
     core.setOutput(result, output);
   } catch(error) {
     core.setFailed(`Action failed with error ${err}`);

@@ -1,5 +1,5 @@
 const { loadFile, writeJsonFile, searchFilesXml } = require('./fileManager')
-const { parserXmlToObject } = require('./xmlParser')
+const { parserXmlToObject, parserJSONtoBase64 } = require('./xmlParser')
 require('dotenv').config()
 
 const APPROVED_GRADE = 3;
@@ -23,8 +23,9 @@ function runStepsEvaluator(path_xml) {
       let obj = parserXmlToObject(file);
       let obj_mapped = mapValues(obj);
       let output = generateOuputJSON(obj_mapped.testcase);
+      parserJSONtoBase64(output)
       writeJsonFile(output,'result.json')
-
+      
       
     });
   } catch(error) {

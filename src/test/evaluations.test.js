@@ -1,4 +1,3 @@
-const { testEnvironment } = require('../../jest.config.js')
 const { generateObjectEvaluations, mapValues, getGrade } = require('../controller/evaluator.js')
 
 describe('Evaluator', () => {

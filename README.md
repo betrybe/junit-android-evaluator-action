@@ -1,32 +1,40 @@
 [![Avaliador-Trybe](https://img.shields.io/badge/avaliador-trybe-green.svg)](https://github.com/Naereen/badges)
  [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 
-# JUnit Evaluator Action - Kotlin
+# Parser JUnit
 
-Projeto em javascript responsável por avaliar proficiência do conteúdo em relação ao curso de android.
-
+Projeto em javascript responsável por processar saida de testes em junit e gerar estrutura conhecida para registrar notas e identificar requisitos.
 ## Pré-requisitos
 
-Action JUnitEvaluator Action Kotlin foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
+Entrada deve ser testes em xml registrados com seguinte estrutura
+
+``` <?xml version="1.0" encoding="UTF-8"?>
+    <testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-24T12:26:35" hostname="vostro" time="0.001">
+      <properties/>
+      <testcase name="requisitos" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
+      <system-out><![CDATA[]]></system-out>
+      <system-err><![CDATA[]]></system-err>
+    </testsuite>
+
+```
+Este parser foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
 
 ## Status
 
 🚧 Em construção... 🚧
 Prova de conceito não esta em uso
 
-
-## Inputs
+<!-- ## Inputs
 - ```pr_author_username``` 
   **Campo obrigatório**
-  Nome do usuário responsável pelo pull request, essa informação é advinda do próprio github.
-
+  Nome do usuário responsável pelo pull request, essa informação é advinda do próprio github. -->
 
 ## Output 
   - ```result```
   Resultado em base 64 originário do arquivo JSON gerado apartir da execução dos testes em JUnit.
 
 
-## Uso 
+## Como utilizar o parser 
 Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
 
 ```bash 
@@ -39,12 +47,4 @@ Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.
 ```
 
 ## Consultando o resultado final
-Adicione o seguinte trecho ao arquivo ***.github/workflows/main.yml***
 
-```bash
-  - name: Run Another step to get result 
-      uses: ./.github/actions/another_step
-      with:
-          evaluation-data: ${{ steps.evaluator.outputs.result }}
-          pr-number: ${{ github.event.inputs.pr_number }}
-```

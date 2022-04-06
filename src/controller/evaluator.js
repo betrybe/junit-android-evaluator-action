@@ -1,4 +1,4 @@
-const { loadFile, writeJsonFile } = require('./fileManager')
+const { loadFile, writeJsonFile, searchFilesXml } = require('./fileManager')
 const { parserXmlToObject } = require('./xmlParser')
 require('dotenv').config()
 
@@ -6,62 +6,27 @@ const APPROVED_GRADE = 3;
 const UNAPPROVED_GRADE = 1;
 
 /**
- * Mapea um objeto testcase para analise
- * @param {obj} testcase
- * @example mapTestCase(testcase)
-  @author Kátia Cibele
- */
-function mapTestCase(testcase) {
-  return testcase.map(function(item) { 
-      return { 
-        name: item.$.name, 
-        classname: item.$.classname, 
-        time: item.$.time,
-        failures: item.failure === undefined || item.failure.lenght > 0 ? null : item.failure.map( function (fail) { return { message: fail.$.message, type: fail.$.type }})
-    }})
-}
-
-/**
- * Mapea um objeto testsuite para analise
- * @param {obj} obj
- * @example mapValues(obj)
-  @author Kátia Cibele
- */
-function mapValues(obj) {
-  
-  return { 
-    name: obj.testsuite.$.name, 
-    tests: obj.testsuite.$.tests, 
-    skipped: obj.testsuite.$.skipped,
-    failures: obj.testsuite.$.failures,
-    errors: obj.testsuite.$.errors,
-    timestamp: obj.testsuite.$.timestamp,
-    hostname: obj.testsuite.$.hostname,
-    time: obj.testsuite.$.time,
-    skipped: obj.testsuite.$.skipped,
-    testcase: mapTestCase(obj.testsuite.testcase)
-  }
-
-};
-
-/**
- * Realiza todos os passo a passo
+ * Passo a passo
  * 1 - Leitura do arquivo xml gerado apartir do comando gradle para construir testes.
  * 2 - Transformar o xml lido em objeto
  * 3 - Mapear objeto em objeto legivel de fácil manipulação.
  * 4 - Calcular nota e objeto para output
  * 5 - Escrever em arquivo de saida
- * @example calculateGrade()
-  @author Kátia Cibele
+ * @example runStepsEvaluator('./src/test/res/')
+ * @params path_xml - caminho da pasta para o xml's.
  */
-function runStepsEvaluator() {
+function runStepsEvaluator(path_xml) {
   try {
-    // TODO Substituir diretorio a ser lido
-    let file = loadFile('../test/res/exemplo.xml');  
-    let obj = parserXmlToObject(file);
-    let obj_mapped = mapValues(obj);
-    let output = generateOuputJSON(obj_mapped.testcase);
-    writeJsonFile(output)
+    let filesList = searchFilesXml(path_xml)
+    filesList.forEach(fileXml => {
+      let file = loadFile(`${path_xml}${fileXml}`);
+      let obj = parserXmlToObject(file);
+      let obj_mapped = mapValues(obj);
+      let output = generateOuputJSON(obj_mapped.testcase);
+      writeJsonFile(output,'result.json')
+
+      
+    });
   } catch(error) {
     throw error;
   }
@@ -77,7 +42,7 @@ function runStepsEvaluator() {
     "github_username":"katiacih",
     "github_repository":"project_test_example",     
       "evaluations":[
-        {"grade":1,"description":"addition_isIcorrect"},
+        {"grade":1,"description":"addition_isIncorrect"},
         {"grade":3,"description":"addition_isCorrect"}
       ]
   }
@@ -161,6 +126,46 @@ function generateObjectEvaluations(testcaseList) {
     return getGrade(testcase.failures, testcase.name) })
   return evaluations;
 }
+
+/**
+ * Mapea um objeto testcase para analise
+ * @param {obj} testcase
+ * @example mapTestCase(testcase)
+  @author Kátia Cibele
+ */
+  function mapTestCase(testcase) {
+    return testcase.map(function(item) { 
+        return { 
+          name: item.$.name, 
+          classname: item.$.classname, 
+          time: item.$.time,
+          failures: item.failure === undefined || item.failure.lenght > 0 ? null : item.failure.map( function (fail) { return { message: fail.$.message, type: fail.$.type }})
+      }})
+  }
+  
+  /**
+   * Mapea um objeto testsuite para analise
+   * @param {obj} obj
+   * @example mapValues(obj)
+    @author Kátia Cibele
+   */
+  function mapValues(obj) {
+    
+    return { 
+      name: obj.testsuite.$.name, 
+      tests: obj.testsuite.$.tests, 
+      skipped: obj.testsuite.$.skipped,
+      failures: obj.testsuite.$.failures,
+      errors: obj.testsuite.$.errors,
+      timestamp: obj.testsuite.$.timestamp,
+      hostname: obj.testsuite.$.hostname,
+      time: obj.testsuite.$.time,
+      skipped: obj.testsuite.$.skipped,
+      testcase: mapTestCase(obj.testsuite.testcase)
+    }
+  
+  };
+  
 
 
 

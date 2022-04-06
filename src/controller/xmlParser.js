@@ -28,7 +28,6 @@ const xml2js = require('xml2js');
     'system-err': [ '' ]
     }
   }
-  @author Kátia Cibele
  */
 function parserXmlToObject(xml_string) {
   const parser = new xml2js.Parser();

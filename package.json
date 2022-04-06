@@ -12,7 +12,9 @@
   "author": "Katia Cibele",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.0"
+    "@actions/core": "^1.6.0",
+    "dotenv": "^16.0.0",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "jest": "^27.5.1"

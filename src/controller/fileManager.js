@@ -1,7 +1,25 @@
 
-const { throws } = require('assert');
 const fs = require('fs');
 const path = require("path");
+
+
+/**
+ * Retorna todos os arquivos xml's
+ * @param {string} pathFiles Caminho dos arquivos xml
+ * @example searchFilesXml()
+ * @output [ 'exemplo.xml' ]
+ * 
+ */
+function searchFilesXml(pathFiles) {
+  let files
+  try {
+    files = fs.readdirSync(pathFiles)
+    files = files.filter((file) => path.extname(file) === ".xml")
+    return files
+  } catch (error) {
+    throw new Error('Erro ao buscar por arquivos xml.')
+  }
+}
 
 /** 
  * Retorna a string gerada pela leitura do arquivo xml.
@@ -27,7 +45,8 @@ const path = require("path");
 function loadFile(pathFile) {
   let xml_string;
   try {
-    xml_string = fs.readFileSync(path.resolve(__dirname, pathFile), "utf8");
+    // xml_string = fs.readFileSync(path.resolve(__dirname, pathFile), "utf8");
+    xml_string = fs.readFileSync(pathFile, "utf8");
     return xml_string
   } catch (error) {
     throw new Error('Erro ao ler arquivo.')
@@ -101,5 +120,6 @@ function writeJsonFile(contentJson, nameFile) {
 module.exports = {
   loadFile,
   loadFileUsingUrl,
+  searchFilesXml,
   writeJsonFile
 }

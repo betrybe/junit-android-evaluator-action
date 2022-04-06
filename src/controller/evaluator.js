@@ -30,11 +30,15 @@ function runStepsEvaluator(path_xml) {
 
     core.info(`🚀 Escrevendo saida -> ${output}`)
 
-    core.setOutput(result, output);
+    core.setOutput('result', parserJSONtoBase64(output));
   } catch(error) {
     core.error('This is a bad error. This will also fail the build.')
     core.setFailed(`Action failed with error ${error}`);
   }
+}
+
+function parserJSONtoBase64(content_json) {
+  return Buffer.from(content_json).toString('base64')
 }
 
 /**

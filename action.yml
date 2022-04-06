@@ -1,10 +1,13 @@
-name: 'JUnit evaluator kotlin'
-description: 'JUnit  Kotlin evaluator  action for Tryber projects in android'
+name: 'JUnit evaluator'
+description: 'JUnit evaluator  action for Tryber projects in android'
 inputs:
-  pr_author_username: 
-    description: "Pull Request author username"
+  test-path: 
+    description: "Path to the test directory"
     required: true
 
 outputs:
   result: 
     description: 'JUnit unit tests JSON results in base64 format'
+runs:
+  using: 'node16'
+  main: 'index.js'

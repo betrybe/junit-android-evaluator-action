@@ -1,5 +1,7 @@
-const { loadFile, writeJsonFile, searchFilesXml } = require('./fileManager')
+const { loadFile, searchFilesXml } = require('./fileManager')
 const { parserXmlToObject } = require('./xmlParser')
+const core = require('@actions/core');
+
 require('dotenv').config()
 
 const APPROVED_GRADE = 3;
@@ -17,20 +19,17 @@ const UNAPPROVED_GRADE = 1;
  */
 function runStepsEvaluator(path_xml) {
   try {
-    let filesList = searchFilesXml(path_xml)
-    filesList.forEach(fileXml => {
-      let file = loadFile(`${path_xml}${fileXml}`);
-      let obj = parserXmlToObject(file);
-      let obj_mapped = mapValues(obj);
-      let output = generateOuputJSON(obj_mapped.testcase);
-      writeJsonFile(output,'result.json')
-
-      
-    });
+    const fileXml = searchFilesXml(path_xml)[0]
+    const file = loadFile(`${path_xml}${fileXml}`);
+    const obj = parserXmlToObject(file);
+    const obj_mapped = mapValues(obj);
+    const output = generateOuputJSON(obj_mapped.testcase);
+    
+    core.setOutput(result, output);
   } catch(error) {
-    throw error;
+    core.setFailed(`Action failed with error ${err}`);
+    core.error('This is a bad error. This will also fail the build.')
   }
-
 }
 
 /**

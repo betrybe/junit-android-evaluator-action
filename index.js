@@ -1,6 +1,5 @@
 const { runStepsEvaluator } = require('./src/controller/evaluator')
+const core = require('@actions/core');
+const testPath = core.getInput('test-path', { required: true });
 
-
-// runStepsEvaluator('./src/test/res/')
-// TODO substituir pelo caminho do xml do projeto Android/Kotlin
-runStepsEvaluator()
+runStepsEvaluator(testPath)

@@ -4,6 +4,12 @@ inputs:
   test-path: 
     description: "Path to the test directory"
     required: true
+  unit-test-output:
+    description: "Output from unit tests"
+    required: false
+  instrumented-test-output:
+    description: "Output from instrumented tests"
+    required: false
 
 outputs:
   result: 

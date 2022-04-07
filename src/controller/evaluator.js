@@ -17,16 +17,16 @@ const UNAPPROVED_GRADE = 1;
  * 6 - Gera output em json
  * @example runStepsEvaluator('./src/test/res/')
  * @params path_xml - caminho da pasta para o xml's.
+ * @return {string}
  */
 function runStepsEvaluator(path_xml) {
   try {
     const filesXml = searchFilesXml(path_xml)
-    let testCasesList = [];
-    filesXml.forEach(function(fileXml) {
+    let testCasesList = filesXml.map(function(fileXml) {
       const file = loadFile(`${path_xml}${fileXml}`);
       const obj = parserXmlToObject(file)
-      const obj_mapped = mapValuesTestSuite(obj);
-      testCasesList = testCasesList.concat(obj_mapped.testcase)
+      const objMapped = mapValuesTestSuite(obj);
+      objMapped.testcase
     })
     
     let output = generateOuputJSON(testCasesList);

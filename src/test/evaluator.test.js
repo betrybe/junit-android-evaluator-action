@@ -74,12 +74,10 @@ describe('Evaluator', () => {
           failures: null
         }
       ]
+
       expect(generateObjectEvaluations(input)).toEqual( [
         { grade: 1, description: 'addition_isIcorrect' },
         { grade: 3, description: 'addition_isCorrect' }])
-    })
-  
+    })  
   })
-
 })
-

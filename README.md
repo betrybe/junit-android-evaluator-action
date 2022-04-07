@@ -1,4 +1,4 @@
-[![Parser-Xml-Trybe](https://img.shields.io/badge/avaliador-trybe-green.svg)](https://github.com/Naereen/badges)
+[![Parser-Xml-Trybe](https://img.shields.io/badge/parser-trybe-green.svg)](https://github.com/Naereen/badges)
  [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 
 # Parser JUnit Actions
@@ -8,14 +8,13 @@ Projeto em javascript responsável por processar saida de testes em junit e gera
 
 Entrada deve ser testes em xml registrados com seguinte estrutura
 
-``` <?xml version="1.0" encoding="UTF-8"?>
-    <testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-24T12:26:35" hostname="vostro" time="0.001">
-      <properties/>
-      <testcase name="requisitos" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
-      <system-out><![CDATA[]]></system-out>
-      <system-err><![CDATA[]]></system-err>
-    </testsuite>
-
+```xml
+  <testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-24T12:26:35" hostname="vostro" time="0.001">
+    <properties/>
+    <testcase name="requisitos" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
+    <system-out><![CDATA[]]></system-out>
+    <system-err><![CDATA[]]></system-err>
+  </testsuite>
 ```
 Este parser foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
 
@@ -31,7 +30,7 @@ Prova de conceito não esta em uso
 ## Configurando seu projeto para utilizar o parser 
 
 Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
-```
+```yml
 runs: 
   using: "composite"
   steps: 

@@ -1,4 +1,4 @@
-const { generateObjectEvaluations, mapValues, getGrade } = require('../controller/evaluator.js')
+const { generateObjectEvaluations, mapValuesTestSuite, getGrade } = require('../controller/evaluator.js')
 
 describe('Evaluator', () => {
  
@@ -22,7 +22,7 @@ describe('Evaluator', () => {
           'system-err': [ '' ]
         }
       }
-      expect(mapValues(input)).toEqual({"errors": "0", "failures": "1", "hostname": "vostro", "name": "com.example.myapplication_teste.ExampleUnitTest", "skipped": "0", "testcase": [], "tests": "3", "time": "0.007", "timestamp": "2022-03-24T12:41:39"});
+      expect(mapValuesTestSuite(input)).toEqual({"errors": "0", "failures": "1", "hostname": "vostro", "name": "com.example.myapplication_teste.ExampleUnitTest", "skipped": "0", "testcase": [], "tests": "3", "time": "0.007", "timestamp": "2022-03-24T12:41:39"});
   
     })
   })

@@ -19,24 +19,25 @@ const UNAPPROVED_GRADE = 1;
  */
 function runStepsEvaluator(path_xml) {
   try {
-    
-    core.info(`\u001b[48;5;6mBuscando arquivos xml gerados pelo gradle ${path_xml}`)
-
     const fileXml = searchFilesXml(path_xml)[0]
     const file = loadFile(`${path_xml}${fileXml}`);
     const obj = parserXmlToObject(file);
-    const obj_mapped = mapValues(obj);
-    const output = generateOuputJSON(obj_mapped.testcase);
+    const objMapped = mapValues(obj);
+    const output = generateOuputJSON(objMapped.testcase);
+    const outputBase64 = parserJSONtoBase64(output);
 
-    core.info(`🚀 Escrevendo saida -> ${output}`)
-
-    core.setOutput('result', parserJSONtoBase64(output));
+    core.setOutput('result', outputBase64);
+    core.notice(`\u001b[48;5;6m[info] 🚀 Processo concluído. Resultado: ${outputBase64}`)
+    
   } catch(error) {
-    core.error('This is a bad error. This will also fail the build.')
-    core.setFailed(`Action failed with error ${error}`);
+    core.setFailed(`${error}`);
   }
 }
 
+/**
+ * @param {Object} content_json 
+ * @returns 
+ */
 function parserJSONtoBase64(content_json) {
   return Buffer.from(content_json).toString('base64')
 }
@@ -173,10 +174,6 @@ function generateObjectEvaluations(testcaseList) {
     }
   
   };
-  
-
-
-
 
 module.exports = {
   generateObjectEvaluations,

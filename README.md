@@ -29,7 +29,7 @@ Prova de conceito não esta em uso
 ## Uso 
 Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
 
-```bash 
+```yml 
 - name: Run JUnit evaluation kotlin
     id: evaluator
     uses: ./.github/actions/junit-evaluator-action-kotlin

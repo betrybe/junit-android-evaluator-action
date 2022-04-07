@@ -45,7 +45,6 @@ function searchFilesXml(pathFiles) {
 function loadFile(pathFile) {
   let xml_string;
   try {
-    // xml_string = fs.readFileSync(path.resolve(__dirname, pathFile), "utf8");
     xml_string = fs.readFileSync(pathFile, "utf8");
     return xml_string
   } catch (error) {

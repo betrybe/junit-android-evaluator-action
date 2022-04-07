@@ -9,22 +9,27 @@ const UNAPPROVED_GRADE = 1;
 
 /**
  * Passo a passo
- * 1 - Leitura do arquivo xml gerado apartir do comando gradle para construir testes.
- * 2 - Transformar o xml lido em objeto
- * 3 - Mapear objeto em objeto legivel de fácil manipulação.
- * 4 - Calcular nota e objeto para output
- * 5 - Escrever em arquivo de saida
+ * 1 - Busca por arquivox .xml dentro do diretorio path_xml
+ * 2 - Leitura do arquivo xml gerado apartir do comando gradle para construir testes.
+ * 3 - Transformar o xml lido em objeto
+ * 4 - Mapeia em objeto legivel de fácil manipulação.
+ * 5 - Calcular nota e cria array com todos os testcases para gerar output
+ * 6 - Gera output em json
  * @example runStepsEvaluator('./src/test/res/')
  * @params path_xml - caminho da pasta para o xml's.
  */
 function runStepsEvaluator(path_xml) {
   try {
-    const fileXml = searchFilesXml(path_xml)[0]
-    const file = loadFile(`${path_xml}${fileXml}`);
-    const obj = parserXmlToObject(file);
-    const obj_mapped = mapValues(obj);
-    const output = generateOuputJSON(obj_mapped.testcase);
+    const filesXml = searchFilesXml(path_xml)
+    let testCasesList = [];
+    filesXml.forEach(function(fileXml) {
+      const file = loadFile(`${path_xml}${fileXml}`);
+      const obj = parserXmlToObject(file)
+      const obj_mapped = mapValuesTestSuite(obj);
+      testCasesList = testCasesList.concat(obj_mapped.testcase)
+    })
     
+    let output = generateOuputJSON(testCasesList);
     core.setOutput(result, output);
   } catch(error) {
     core.setFailed(`Action failed with error ${err}`);
@@ -148,7 +153,7 @@ function generateObjectEvaluations(testcaseList) {
    * @example mapValues(obj)
     @author Kátia Cibele
    */
-  function mapValues(obj) {
+  function mapValuesTestSuite(obj) {
     
     return { 
       name: obj.testsuite.$.name, 
@@ -167,8 +172,6 @@ function generateObjectEvaluations(testcaseList) {
   
 
 
-
-
 module.exports = {
   generateObjectEvaluations,
   generateOuputJSON,
@@ -177,7 +180,7 @@ module.exports = {
   getGithubRepositoryNameData, 
   getGrade,
   mapTestCase,
-  mapValues,
+  mapValuesTestSuite,
   runStepsEvaluator
 }
 

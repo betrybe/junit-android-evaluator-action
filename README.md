@@ -1,7 +1,7 @@
-[![Avaliador-Trybe](https://img.shields.io/badge/avaliador-trybe-green.svg)](https://github.com/Naereen/badges)
+[![Parser-Xml-Trybe](https://img.shields.io/badge/avaliador-trybe-green.svg)](https://github.com/Naereen/badges)
  [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 
-# Parser JUnit
+# Parser JUnit Actions
 
 Projeto em javascript responsável por processar saida de testes em junit e gerar estrutura conhecida para registrar notas e identificar requisitos.
 ## Pré-requisitos
@@ -46,5 +46,24 @@ Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.
 
 ```
 
-## Consultando o resultado final
+## Configurando seu projeto para utilizar o parser 
+
+No arquivo .github/workflows/main.yml
+```
+runs: 
+  using: "composite"
+  steps: 
+    - name: Fetch JUnit Parser
+      uses: actions/checkout@v2
+      with:
+        repository: betrybe/junit-parser-action
+        ref: v1
+        token: ${{ inputs.github_pat }}
+        path: .github/actions/junit-parser-action
+
+      - name: Run JUnit Parser
+        uses: ./.github/actions/junit-parser-action
+        with:
+          test-path: 'app/build/outputs/androidTest-results/connected/'
+```
 

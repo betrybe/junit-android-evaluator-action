@@ -24,31 +24,13 @@ Este parser foi implementado para trabalhar com **JUnit 4** e **JUnit 5**.
 🚧 Em construção... 🚧
 Prova de conceito não esta em uso
 
-<!-- ## Inputs
-- ```pr_author_username``` 
-  **Campo obrigatório**
-  Nome do usuário responsável pelo pull request, essa informação é advinda do próprio github. -->
-
 ## Output 
   - ```result```
   Resultado em base 64 originário do arquivo JSON gerado apartir da execução dos testes em JUnit.
 
-
-## Como utilizar o parser 
-Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
-
-```yml 
-- name: Run JUnit evaluation kotlin
-    id: evaluator
-    uses: ./.github/actions/junit-evaluator-action-kotlin
-    with:
-        pr_author_username: ${{ github.event.inputs.pr_author_username }}
-
-```
-
 ## Configurando seu projeto para utilizar o parser 
 
-No arquivo .github/workflows/main.yml
+Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
 ```
 runs: 
   using: "composite"

@@ -4,6 +4,7 @@
   "description": "Avaliador automatico para projetos android junit",
   "main": "index.js",
   "scripts": {
+    "build": "ncc build index.js --license licenses.txt --out dist/index.js",
     "start": "node index.js",
     "debug": "nodemon --inspect index.js",
     "watch": "nodemon index.js",

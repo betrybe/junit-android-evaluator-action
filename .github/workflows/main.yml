@@ -20,10 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-      - run: npm run build --if-present
 
       - name: Run Test
-      - run: npm test
+        run: npm test
 
       - name: Build Action
-        run: ncc build index.js --license licenses.txt --out dist/index.js
+        run: npm run build --if-present

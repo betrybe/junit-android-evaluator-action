@@ -19,4 +19,4 @@ outputs:
     description: 'JUnit unit tests JSON results in base64 format'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'

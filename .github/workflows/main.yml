@@ -10,12 +10,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch Repository
       - uses: actions/checkout@v3
-      - name: Use Node.js 16
+
+      - name: Setup Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
+
+      - name: Run Test
       - run: npm test
+
+      - name: Build Action
+        run: ncc build index.js --license licenses.txt --out dist/index.js

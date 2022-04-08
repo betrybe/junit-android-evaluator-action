@@ -6,7 +6,7 @@ inputs:
     required: true
   test-path: 
     description: "Path to the test directory"
-    required: true
+    required: false
   unit-test-output:
     description: "Output from unit tests"
     required: false

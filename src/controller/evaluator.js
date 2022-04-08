@@ -27,7 +27,7 @@ function runStepsEvaluator(path_xml) {
     const outputBase64 = parserJSONtoBase64(output) 
 
     core.setOutput('result', outputBase64);
-    core.notice(`\u001b[32;5;6m[notice] 🚀 Processo concluído -> ${outputBase64}`)
+    core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
     return outputBase64
   } catch(error) {
     core.setFailed(`${error}`);

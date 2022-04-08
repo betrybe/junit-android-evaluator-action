@@ -8,7 +8,7 @@ const core = require('@actions/core');
 function processingOutputTests(unitTestOutput, instrumentedTestOutput) {
   try {
 
-    core.notice(`\u001b[48;5;6m 🖇 Unindo outputs de testes instrumentados e testes unitários.`)
+    core.info(`\u001b[48;5;6m[info] 🖇 Unindo outputs de testes instrumentados e testes unitários.`)
     return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
 
   } catch (error) {

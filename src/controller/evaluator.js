@@ -89,7 +89,7 @@ function generateOuputJSON(testcaseList) {
 function getGithubUsernameData() {
   repository = process.env.INPUT_PR_AUTHOR_USERNAME;
   if(repository) return repository;
-  else return core.getInput('pr_author_username', { required: true });;
+  else return core.getInput('pr_author_username', { required: true });
 }
 
 /**

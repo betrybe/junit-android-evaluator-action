@@ -6,6 +6,6 @@ const unitTestOutput = core.getInput('unit-test-output', { required: false });
 const instrumentedTestOutput = core.getInput('instrumented-test-output', { required: false });
 
 
-core.notice('\u001b[38;5;6m ⚙️ Rodando avaliador');
+core.info('\u001b[38;5;6m[info] ⚙️ Rodando avaliador');
 
 testPath ? runStepsEvaluator(testPath) : processingOutputTests(unitTestOutput, instrumentedTestOutput)

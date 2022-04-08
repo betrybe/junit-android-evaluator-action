@@ -11,7 +11,6 @@ describe('Evaluator Integration', () => {
     
     test('Must return a base64 string when parse a xml test result', () => {
         const expected = runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo1'))
-        console.log(expected)
         const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 
         expect(decodedPayload.evaluations).toEqual([

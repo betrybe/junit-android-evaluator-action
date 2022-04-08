@@ -2,28 +2,82 @@ const core = require('@actions/core');
 const unitTestOutput = core.getInput('unit-test-output', { required: false });
 const instrumentedTestOutput = core.getInput('instrumented-test-output', { required: false });
 
-function processingOutput() {
-  
-  // Dada entrada base 64, decodificar pra json ou object
-  let unitTestObject = parserBase64ToObject(unitTestOutput);
-  let instrumentedTestObject = parserBase64ToObject(instrumentedTestOutput);
-  // joined
-  let evaluationsList = unitTestObject.evaluations.concat(instrumentedTestObject.evaluations) 
-  
-  // retornar objeto mergeado
-  return  { 
-    github_username: unitTestObject.github_username,
-    github_repository: unitTestObject.github_repository,
-    evaluations: evaluationsList
+
+function processingOutputTests() {
+  core.notice(`\u001b[48;5;6m[info] Unindo outputs de testes instrumentados e testes unitários.`)
+  try {
+    return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
+
+  } catch (error) {
+    core.setFailed(`${error}`);
   }
 }
 
 
-function parserJSONtoBase64(content_json) {
-  return Buffer.from(content_json).toString('base64')
+/** Unifica outputs de testes instrumentados e testes unitários
+ * @param {string} unitTestOut string em base64 do objeto dos testes unitarios
+ * @param {string} instrumentedTestOut string em base64 
+ * @returns {string}  { 
+    github_username: '',
+    github_repository: '',
+    evaluations: []
+  }
+ */
+function generateObjectFromOutputs(unitTestOut, instrumentedTestOut) {
+  try {
+
+    let unitTestObject = parserBase64ToObject(unitTestOut);
+    let instrumentedTestObject = parserBase64ToObject(instrumentedTestOut);
+  
+    let evaluationsList = concatOutputs(unitTestObject, instrumentedTestObject)
+  
+    return  { 
+      github_username: unitTestObject.github_username,
+      github_repository: unitTestObject.github_repository,
+      evaluations: evaluationsList
+    }
+  } catch (error) { throw error; }
+  
 }
 
+
+/** decodifica base64 para objeto
+ * @param {string} data string em base64 do objeto
+ * @returns {object}  { 
+    github_username: '',
+    github_repository: '',
+    evaluations: []
+  }
+ */
 function parserBase64ToObject(data) {
-  
-  return Buffer.from(data, 'base64').toString('utf8')
+
+  try {
+    return JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
+  }catch (_) {
+    throw new Error('Erro ao converter base 64 para objeto.');
+  }
+}
+
+/** concatena listas de evaluations
+ * @param {Object} data string em base64 do objeto
+ * @example concatOuputs({github_username: 'user1',
+    github_repository: 'repo',
+    evaluations: [{grade: 1, description: 'descricao 1'}]}, {github_username: 'user1',
+    github_repository: 'repo',
+    evaluations: [{grade: 2, description: 'descricao 2'}]})
+ * @returns {Array} [{grade: 1, description: 'descricao 1'}, {grade: 2, description: 'descricao 2'}]
+ */
+function concatOutputs(objTest1, objTest2) {
+  try {
+    return objTest1.evaluations.concat(objTest2.evaluations) 
+  } catch (_) {
+    throw new Error('Erro ao unificar outputs.');
+  }
+
+}
+
+
+module.exports = {
+  processingOutputTests,
+  generateObjectFromOutputs
 }

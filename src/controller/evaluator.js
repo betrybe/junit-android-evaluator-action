@@ -22,16 +22,20 @@ const UNAPPROVED_GRADE = 1;
 function runStepsEvaluator(path_xml) {
   try {
     const filesXml = searchFilesXml(path_xml)
-    let testCasesList = filesXml.map(function(fileXml) {
-      const file = loadFile(`${path_xml}${fileXml}`);
+    const testCasesList = filesXml.map((fileXml) => {
+      const file = loadFile(`${path_xml}/${fileXml}`);
       const obj = parserXmlToObject(file)
       const objMapped = mapValuesTestSuite(obj);
-      objMapped.testcase
+      return objMapped.testcase
     })
     
-    let output = generateOuputJSON(testCasesList);
-    core.setOutput('result', parserJSONtoBase64(output));
+    // TODO get github_username e github_repository
+    const output = generateOuputJSON(testCasesList);
+    const outputBase64 = parserJSONtoBase64(output) 
+
+    core.setOutput('result', outputBase64);
     core.notice(`\u001b[48;5;6m[info] 🚀 Processo concluído. Resultado: ${outputBase64}`)
+    return outputBase64
   } catch(error) {
     core.setFailed(`${error}`);
   }
@@ -106,7 +110,7 @@ function getGithubRepositoryNameData() {
   }
  */
 function getGrade( failures, requirementDescription ) {
-  if(failures !== null && failures.length > 0 ){
+  if(failures !== null && failures?.length > 0 ){
     return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
   }
   else return { grade: APPROVED_GRADE, description: requirementDescription }
@@ -151,7 +155,7 @@ function generateObjectEvaluations(testcaseList) {
           name: item.$.name, 
           classname: item.$.classname, 
           time: item.$.time,
-          failures: item.failure === undefined || item.failure.lenght > 0 ? null : item.failure.map( function (fail) { return { message: fail.$.message, type: fail.$.type }})
+          failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map( function (fail) { return { message: fail.$.message, type: fail.$.type }})
       }})
   }
   
@@ -187,6 +191,7 @@ module.exports = {
   getGrade,
   mapTestCase,
   mapValuesTestSuite,
+  parserJSONtoBase64,
   runStepsEvaluator
 }
 

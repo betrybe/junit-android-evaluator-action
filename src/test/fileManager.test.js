@@ -5,7 +5,7 @@ describe('File Manager', () => {
   describe('validate xml file reading', () => {
     test('xml file read successfully ', () => {
       let output = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>';
-      let file = loadFile(`${__dirname}/res/exemplo.xml`)
+      let file = loadFile(`${__dirname}/res/exemplo1/exemplo.xml`)
       expect(file).toMatch(output);
     })
   

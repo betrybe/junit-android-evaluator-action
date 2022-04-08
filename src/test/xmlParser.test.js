@@ -5,7 +5,7 @@ describe('XMl parser', () => {
 
   describe('validate by parsing from xml to object', () => {
     test('parse with a valid xml successfully', () => {
-      let file = loadFile(`${__dirname}/res/exemplo.xml`);
+      let file = loadFile(`${__dirname}/res/exemplo1/exemplo.xml`);
       let output = parserXmlToObject(file);
       let expected = 'testsuite\":{\"$\":{\"name\":\"com.example.myapplication_teste.ExampleUnitTest\",\"tests\":\"3\"'
       expect(JSON.stringify(output)).toMatch(expected)

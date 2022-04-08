@@ -1,6 +1,9 @@
 name: 'JUnit evaluator'
 description: 'JUnit evaluator  action for Tryber projects in android'
 inputs:
+  pr_author_username:
+    description: 'Pull Request author username'
+    required: true
   test-path: 
     description: "Path to the test directory"
     required: true

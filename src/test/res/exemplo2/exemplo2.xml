@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2022-03-24T12:41:39" hostname="vostro" time="0.007">
+  <properties/>
+  <testcase name="sub_isCorrect" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

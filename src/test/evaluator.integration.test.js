@@ -1,27 +1,35 @@
 const { runStepsEvaluator } = require('../controller/evaluator.js')
+const core = require('@actions/core');
 const path = require("path");
 
+jest.mock('@actions/core');
 
 describe('Evaluator Integration', () => {
+    beforeAll(() => {
+        core.getInput.mockResolvedValue('teste_user');
+    });
+    
     test('Must return a base64 string when parse a xml test result', () => {
         const expected = runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo1'))
-        const obj = {
-            "github_username":"user",
-            "github_repository":"project_test_example",
-            "evaluations":[
-                {"grade":1,"description":"addition_isIcorrect"},
-                {"grade":3,"description":"addition_isCorrect"}
-            ]
-        }
+        console.log(expected)
+        const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 
-        expect(expected)
-        .toEqual("eyJnaXRodWJfdXNlcm5hbWUiOm51bGwsImdpdGh1Yl9yZXBvc2l0b3J5IjpudWxsLCJldmFsdWF0aW9ucyI6W3siZ3JhZGUiOjN9XX0=")
+        expect(decodedPayload.evaluations).toEqual([
+            { grade: 3, description: 'addition_isIcorrect' },
+            { grade: 3, description: 'addition_isCorrect' },
+            { grade: 3, description: 'addition_isCorrect_2' },
+        ])
     })
 
     test('Must merge to xml file to generate a base64', () => {
         const expected = runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo2'));
+        const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 
-        expect(runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo2')))
-        .toEqual("eyJnaXRodWJfdXNlcm5hbWUiOm51bGwsImdpdGh1Yl9yZXBvc2l0b3J5IjpudWxsLCJldmFsdWF0aW9ucyI6W3siZ3JhZGUiOjN9LHsiZ3JhZGUiOjN9XX0=")
+        expect(decodedPayload.evaluations).toEqual([
+            { grade: 3, description: 'addition_isIcorrect' },
+            { grade: 3, description: 'addition_isCorrect' },
+            { grade: 3, description: 'addition_isCorrect_2' },
+            { grade: 3, description: 'sub_isCorrect' }
+        ])
     })
 })

@@ -13,12 +13,12 @@ const core = require('@actions/core');
 function searchFilesXml(pathFiles) {
   let files
   try {
-    core.notice(`\u001b[48;5;6m[info] Buscando arquivos xml -> ${pathFiles}`)
+    core.notice(`\u001b[38;5;6m[notice] 📁 Buscando arquivos xml -> ${pathFiles}`)
     files = fs.readdirSync(pathFiles)
     files = files.filter((file) => path.extname(file) === ".xml")
     return files
   } catch (error) {
-    throw new Error('Erro ao buscar por arquivos xml.')
+    throw new Error(`Erro ao buscar por arquivos xml ->\n${error}`)
   }
 }
 

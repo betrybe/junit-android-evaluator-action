@@ -16,25 +16,18 @@ const UNAPPROVED_GRADE = 1;
  * 5 - Calcular nota e cria array com todos os testcases para gerar output
  * 6 - Gera output em json
  * @example runStepsEvaluator('./src/test/res/')
- * @params path_xml - caminho da pasta para o xml's.
+ * @param {string} path_xml - caminho da pasta para o xml's.
  * @return {string}
  */
 function runStepsEvaluator(path_xml) {
   try {
     const filesXml = searchFilesXml(path_xml)
-    const testCasesList = filesXml.map((fileXml) => {
-      const file = loadFile(`${path_xml}/${fileXml}`);
-      const obj = parserXmlToObject(file)
-      const objMapped = mapValuesTestSuite(obj);
-      return objMapped.testcase
-    })
-    
-    // TODO get github_username e github_repository
+    const testCasesList = buildTestCaseList(path_xml, filesXml)
     const output = generateOuputJSON(testCasesList);
     const outputBase64 = parserJSONtoBase64(output) 
 
     core.setOutput('result', outputBase64);
-    core.notice(`\u001b[48;5;6m[info] 🚀 Processo concluído. Resultado: ${outputBase64}`)
+    core.notice(`\u001b[32;5;6m[notice] 🚀 Processo concluído -> ${outputBase64}`)
     return outputBase64
   } catch(error) {
     core.setFailed(`${error}`);
@@ -43,17 +36,32 @@ function runStepsEvaluator(path_xml) {
 
 /**
  * @param {Object} content_json 
- * @returns 
+ * @returns {string}
  */
 function parserJSONtoBase64(content_json) {
   return Buffer.from(content_json).toString('base64')
 }
 
 /**
+ * @param {string} path 
+ * @param {string[]} files 
+ * @returns {Object[]}
+ */
+function buildTestCaseList(path, files){
+  return files.map((file) => {
+    const loadedFile = loadFile(`${path}/${file}`);
+    const testSuite = parserXmlToObject(loadedFile)
+    const objMapped = mapValuesTestSuite(testSuite);
+    return objMapped.testcase
+  }).reduce((acc, val) => acc.concat(val), []);
+}
+
+/**
  * Gera saida em json apartir de um objeto
+ * TODO get github_username e github_repository
  * @param {*} testcaseList 
  * @example generateOuputJSON()
- * @returns 
+ * @returns
  * {
     "github_username":"katiacih",
     "github_repository":"project_test_example",     
@@ -79,9 +87,7 @@ function generateOuputJSON(testcaseList) {
  * @example getGithubUsernameData(obj)
  */
 function getGithubUsernameData() {
-  author = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if (author) return author 
-  else return null;
+  core.getInput('pr_author_username', { required: true });
 }
 
 /**
@@ -138,32 +144,33 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
-  let evaluations = testcaseList.map(function(testcase) { 
-    return getGrade(testcase.failures, testcase.name) })
-  return evaluations;
+  return testcaseList.map((testcase) => { 
+    return getGrade(testcase.failures, testcase.name) 
+  })
 }
 
 /**
  * Mapea um objeto testcase para analise
  * @param {obj} testcase
  * @example mapTestCase(testcase)
-  @author Kátia Cibele
+ * @author Kátia Cibele
  */
   function mapTestCase(testcase) {
-    return testcase.map(function(item) { 
-        return { 
+    return testcase.map((item) => { 
+      return { 
           name: item.$.name, 
           classname: item.$.classname, 
           time: item.$.time,
-          failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map( function (fail) { return { message: fail.$.message, type: fail.$.type }})
-      }})
+          failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+      }
+    })
   }
   
   /**
    * Mapea um objeto testsuite para analise
-   * @param {obj} obj
-   * @example mapValues(obj)
-    @author Kátia Cibele
+   * @param {object} obj
+   * @example mapValues({})
+   * @return {object}
    */
   function mapValuesTestSuite(obj) {
     

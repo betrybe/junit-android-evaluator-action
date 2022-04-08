@@ -1,11 +1,14 @@
 const core = require('@actions/core');
-const unitTestOutput = core.getInput('unit-test-output', { required: false });
-const instrumentedTestOutput = core.getInput('instrumented-test-output', { required: false });
 
-
-function processingOutputTests() {
-  core.notice(`\u001b[48;5;6m[info] Unindo outputs de testes instrumentados e testes unitários.`)
+/**
+ * @param {string} unitTestOutput 
+ * @param {string} instrumentedTestOutput 
+ * @returns {string}
+ */
+function processingOutputTests(unitTestOutput, instrumentedTestOutput) {
   try {
+
+    core.notice(`\u001b[48;5;6m[notice] 🖇 Unindo outputs de testes instrumentados e testes unitários.`)
     return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
 
   } catch (error) {
@@ -36,12 +39,15 @@ function generateObjectFromOutputs(unitTestOut, instrumentedTestOut) {
       github_repository: unitTestObject.github_repository,
       evaluations: evaluationsList
     }
-  } catch (error) { throw error; }
+  } catch (error) { 
+    throw error; 
+  }
   
 }
 
 
-/** decodifica base64 para objeto
+/** 
+ * Decodifica base64 para objeto
  * @param {string} data string em base64 do objeto
  * @returns {object}  { 
     github_username: '',
@@ -58,7 +64,8 @@ function parserBase64ToObject(data) {
   }
 }
 
-/** concatena listas de evaluations
+/** 
+ * Concatena listas de evaluations
  * @param {Object} data string em base64 do objeto
  * @example concatOuputs({github_username: 'user1',
     github_repository: 'repo',
@@ -73,9 +80,7 @@ function concatOutputs(objTest1, objTest2) {
   } catch (_) {
     throw new Error('Erro ao unificar outputs.');
   }
-
 }
-
 
 module.exports = {
   processingOutputTests,

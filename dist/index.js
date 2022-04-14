@@ -8252,8 +8252,8 @@ exports.debug = debug; // for test
 const { loadFile, searchFilesXml } = __nccwpck_require__(3911)
 const { parserXmlToObject } = __nccwpck_require__(5369)
 const core = __nccwpck_require__(6964);
-
-(__nccwpck_require__(4000).config)()
+const { getGithubUsernameData,  getGithubRepositoryNameData } = __nccwpck_require__(8536)
+__nccwpck_require__(4000).config()
 
 const APPROVED_GRADE = 3;
 const UNAPPROVED_GRADE = 1;
@@ -8332,26 +8332,6 @@ function generateOuputJSON(testcaseList) {
   })
 }
 
-
-/**
- * Retorna valor da variavel de ambiente.
- * @example getGithubUsernameData(obj)
- */
-function getGithubUsernameData() {
-  repository = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(repository) return repository;
-  else return core.getInput('pr_author_username', { required: true });
-}
-
-/**
- * Retorna valor da variavel de ambiente.
- * @example getGithubRepositoryNameData()
- */
-function getGithubRepositoryNameData() {
-  repository = process.env.GITHUB_REPOSITORY;
-  if(repository) return repository;
-  else return null;
-}
 
 /**
  * Para cada testcase retorna a estrutura com nota e descrição
@@ -8446,8 +8426,6 @@ module.exports = {
   generateObjectEvaluations,
   generateOuputJSON,
   generateObjectEvaluations,
-  getGithubRepositoryNameData,
-  getGithubRepositoryNameData, 
   getGrade,
   mapTestCase,
   mapValuesTestSuite,
@@ -8519,170 +8497,47 @@ function loadFile(pathFile) {
 
 }
 
-
-/**
- * Retorna a string gerada pela leitura de um arquivo.xml atraves de um url arquivo xml.
- * @param {string} url
- * @example loadFileUsingUrl("https://getxml.com.br/arquivo.xml")
- * @output 
- * <?xml version="1.0" encoding="UTF-8"?>
-    <testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-24T12:26:35" hostname="vostro" time="0.001">
-      <properties/>
-      <testcase name="addition_isCorrect" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
-      <system-out><![CDATA[]]></system-out>
-      <system-err><![CDATA[]]></system-err>
-    </testsuite>
-  @author Kátia Cibele
- */
- function loadFileUsingUrl(url) {
-
-  let req = http.get(url, function(res) {
-    let data = '';
-    res.on('data', function(stream) {
-        data += stream;
-    });
-    res.on('end', function(){
-        parser.parseString(data, function(error, result) {
-            if(error === null) {
-                return result;
-            }
-            else {
-                throw error;
-            }
-        });
-    });
-  });
-}
-
-/**
- * Escreve um objeto json em um arquivo result.json
- * @param {object} contentJson 
- * @param {string} nameFile 
- * @example writeJsonFile({
-  "github_username": "username_github",
-  "evaluations": [
-    {
-      "grade": 1,
-      "description": "1 - Verificacao 1"
-    },
-    {
-      "grade": 3,
-      "description": "2 - Verificacao 2"
-    }
-  ]
-}, "result.json")
- * @author Kátia Cibele
- */
-function writeJsonFile(contentJson, nameFile) {
-  fs.writeFile(nameFile, contentJson, (err) => {
-    if(err) {
-      throw new Error('Erro ao criar arquivo.')
-    }
-  })
-}
-
-
 module.exports = {
   loadFile,
-  loadFileUsingUrl,
-  searchFilesXml,
-  writeJsonFile
+  searchFilesXml
 }
 
 
 /***/ }),
 
-/***/ 4850:
+/***/ 8536:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+(__nccwpck_require__(4000).config)()
 const core = __nccwpck_require__(6964);
 
 /**
- * @param {string} unitTestOutput 
- * @param {string} instrumentedTestOutput 
- * @returns {string}
+ * Retorna valor da variavel de ambiente.
+ * @example getGithubUsernameData(obj)
  */
-function processingOutputTests(unitTestOutput, instrumentedTestOutput) {
-  try {
-
-    core.info(`\u001b[48;5;6m[info] 🖇 Unindo outputs de testes instrumentados e testes unitários.`)
-    return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
-
-  } catch (error) {
-    core.setFailed(`${error}`);
-  }
+ function getGithubUsernameData() {
+  repository = process.env.INPUT_PR_AUTHOR_USERNAME;
+  if(repository) return repository;
+  else return core.getInput('pr_author_username', { required: true });
 }
 
-
-/** Unifica outputs de testes instrumentados e testes unitários
- * @param {string} unitTestOut string em base64 do objeto dos testes unitarios
- * @param {string} instrumentedTestOut string em base64 
- * @returns {string}  { 
-    github_username: '',
-    github_repository: '',
-    evaluations: []
-  }
+/**
+ * Retorna valor da variavel de ambiente.
+ * @example getGithubRepositoryNameData()
  */
-function generateObjectFromOutputs(unitTestOut, instrumentedTestOut) {
-  try {
-
-    let unitTestObject = parserBase64ToObject(unitTestOut);
-    let instrumentedTestObject = parserBase64ToObject(instrumentedTestOut);
-  
-    let evaluationsList = concatOutputs(unitTestObject, instrumentedTestObject)
-  
-    return  { 
-      github_username: unitTestObject.github_username,
-      github_repository: unitTestObject.github_repository,
-      evaluations: evaluationsList
-    }
-  } catch (error) { 
-    throw error; 
-  }
-  
+function getGithubRepositoryNameData() {
+  repository = process.env.GITHUB_REPOSITORY;
+  if(repository) return repository;
+  else return null;
 }
 
-
-/** 
- * Decodifica base64 para objeto
- * @param {string} data string em base64 do objeto
- * @returns {object}  { 
-    github_username: '',
-    github_repository: '',
-    evaluations: []
-  }
- */
-function parserBase64ToObject(data) {
-
-  try {
-    return JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
-  }catch (_) {
-    throw new Error('Erro ao converter base 64 para objeto.');
-  }
-}
-
-/** 
- * Concatena listas de evaluations
- * @param {Object} data string em base64 do objeto
- * @example concatOuputs({github_username: 'user1',
-    github_repository: 'repo',
-    evaluations: [{grade: 1, description: 'descricao 1'}]}, {github_username: 'user1',
-    github_repository: 'repo',
-    evaluations: [{grade: 2, description: 'descricao 2'}]})
- * @returns {Array} [{grade: 1, description: 'descricao 1'}, {grade: 2, description: 'descricao 2'}]
- */
-function concatOutputs(objTest1, objTest2) {
-  try {
-    return objTest1.evaluations.concat(objTest2.evaluations) 
-  } catch (_) {
-    throw new Error('Erro ao unificar outputs.');
-  }
-}
 
 module.exports = {
-  processingOutputTests,
-  generateObjectFromOutputs
+  getGithubUsernameData,
+  getGithubRepositoryNameData
 }
+
+
 
 /***/ }),
 
@@ -8902,17 +8757,13 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const { runStepsEvaluator } = __nccwpck_require__(1941)
-const { processingOutputTests } = __nccwpck_require__(4850)
 const core = __nccwpck_require__(6964);
-const testPath = core.getInput('test-path', { required: true });
-const unitTestOutput = core.getInput('unit-test-output', { required: false });
-const instrumentedTestOutput = core.getInput('instrumented-test-output', { required: false });
-
+const unitPath = 'app/build/outputs/androidTest-results/connected/'
+const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
 core.info('\u001b[38;5;6m[info] ⚙️ Rodando avaliador');
 
-testPath ? runStepsEvaluator(testPath) : processingOutputTests(unitTestOutput, instrumentedTestOutput)
-
+runStepsEvaluator(unitPath, instrumentedPath)
 })();
 
 module.exports = __webpack_exports__;

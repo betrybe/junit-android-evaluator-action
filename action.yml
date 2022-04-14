@@ -11,8 +11,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-      # - name: checkout
-      #   uses: actions/checkout@v3
 
       - name: Set up Nodejs 16
         uses: actions/setup-node@v3
@@ -33,11 +31,11 @@ runs:
         if: ${{ true }}
         with:
           api-level: 29
-          script: ./gradlew connectedCheck
+          script: ./gradlew connectedCheck && ./gradlew test
 
-      - name: Run Unit tests
-        run: ./gradlew test
-        shell: bash
+      # - name: Run Unit tests
+      #   run: ./gradlew test
+      #   shell: bash
 
       - name: Get JUnit results
         run: node $GITHUB_ACTION_PATH/dist/index.js

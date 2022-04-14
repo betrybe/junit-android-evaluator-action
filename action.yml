@@ -30,7 +30,7 @@ runs:
 
       - name: Run Intrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ false }}
+        if: ${{ echo $(if test -d ./src/androidTest; then echo true; fi) }}
         with:
           api-level: 29
           script: ./gradlew connectedCheck
@@ -40,5 +40,5 @@ runs:
         shell: bash
 
       - name: Get JUnit results
-        run: node dist/index.js
+        run: node $GITHUB_ACTION_PATH/dist/index.js
         shell: bash

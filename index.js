@@ -5,4 +5,4 @@ const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
 core.info('\u001b[38;5;6m[info] ⚙️ Rodando avaliador');
 
-runStepsEvaluator(unitPath, instrumentedPath)
+runStepsEvaluator([unitPath, instrumentedPath])

@@ -5,20 +5,24 @@ const core = require('@actions/core');
 
 /**
  * Retorna todos os arquivos xml's
- * @param {string} pathFiles Caminho dos arquivos xml
+ * @param {string} dirPath Caminho dos arquivos xml
  * @example searchFilesXml()
  * @output [ 'exemplo.xml' ]
  * 
  */
-function searchFilesXml(pathFiles) {
+function searchFilesXml(dirPath) {
   let files
   try {
-    core.info(`\u001b[38;5;6m[info] 📁 Buscando arquivos xml -> ${pathFiles}`)
-    files = fs.readdirSync(pathFiles)
+    core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
+    files = fs.readdirSync(dirPath)
     files = files.filter((file) => path.extname(file) === ".xml")
-    return files
+
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
+
+    return {files, path: dirPath}
   } catch (error) {
-    throw new Error(`Erro ao buscar por arquivos xml ->\n${error}`)
+    core.info(`\u001b[38;5;6m[info] 📭 Arquivos não encontrados -> ${dirPath}`)
+    return {files: [], path: dirPath}  
   }
 }
 

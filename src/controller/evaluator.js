@@ -16,13 +16,19 @@ const UNAPPROVED_GRADE = 1;
  * 5 - Calcular nota e cria array com todos os testcases para gerar output
  * 6 - Gera output em json
  * @example runStepsEvaluator('./src/test/res/')
- * @param {string} path_xml - caminho da pasta para o xml's.
+ * @param {array} pathList - caminho da pasta para o xml's.
  * @return {string}
  */
-function runStepsEvaluator(path_xml) {
+function runStepsEvaluator(pathList) {
   try {
-    const filesXml = searchFilesXml(path_xml)
-    const testCasesList = buildTestCaseList(path_xml, filesXml)
+
+    const pathFiles = pathList
+      .map((path) => searchFilesXml(path))
+
+    const testCasesList = pathFiles.map((pathFile) => {
+      return buildTestCaseList(pathFile.path, pathFile.files)
+    }).reduce((acc, testType) => acc.concat(testType), []);
+    
     const output = generateOuputJSON(testCasesList);
     const outputBase64 = parserJSONtoBase64(output) 
 
@@ -72,8 +78,8 @@ function buildTestCaseList(path, files){
   }
  */
 function generateOuputJSON(testcaseList) {
-  let username = getGithubUsernameData();
-  let repository = getGithubRepositoryNameData()
+  const username = getGithubUsernameData();
+  const repository = getGithubRepositoryNameData()
   return JSON.stringify({
     github_username: username,
     github_repository: repository,
@@ -126,6 +132,7 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
+   // [unit -> {}, instrumented -> {}]
   return testcaseList.map((testcase) => { 
     return getGrade(testcase.failures, testcase.name) 
   })
@@ -174,7 +181,6 @@ function generateObjectEvaluations(testcaseList) {
 module.exports = {
   generateObjectEvaluations,
   generateOuputJSON,
-  generateObjectEvaluations,
   getGrade,
   mapTestCase,
   mapValuesTestSuite,

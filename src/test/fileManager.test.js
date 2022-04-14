@@ -1,18 +1,19 @@
-const { loadFile } = require('../controller/fileManager')
+const { searchFilesXml } = require('../controller/fileManager')
 
 describe('File Manager', () => {
 
-  describe('validate xml file reading', () => {
-    test('xml file read successfully ', () => {
-      let output = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>';
-      let file = loadFile(`${__dirname}/res/exemplo1/exemplo.xml`)
-      expect(file).toMatch(output);
-    })
-  
-    test('read file with file not found ', () => {
-      expect(() => loadFile('test.xml')).toThrow('Erro ao ler arquivo.');
-    })
-  
+  test('directory read successfully ', () => {
+    const dirPath = `${__dirname}/res/exemplo1`
+    const pathFiles = searchFilesXml(dirPath)
+
+    expect(pathFiles).toEqual({files: ["exemplo.xml"], path: dirPath})
   })
+
+  test('must return an array when directory does not exist', () => {
+    const dirPath = `${__dirname}/res/naoexiste`
+    const pathFiles = searchFilesXml(dirPath)
+
+    expect(pathFiles).toEqual({files: [], path: dirPath})
+  })  
 })
 

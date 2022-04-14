@@ -8267,13 +8267,19 @@ const UNAPPROVED_GRADE = 1;
  * 5 - Calcular nota e cria array com todos os testcases para gerar output
  * 6 - Gera output em json
  * @example runStepsEvaluator('./src/test/res/')
- * @param {string} path_xml - caminho da pasta para o xml's.
+ * @param {array} pathList - caminho da pasta para o xml's.
  * @return {string}
  */
-function runStepsEvaluator(path_xml) {
+function runStepsEvaluator(pathList) {
   try {
-    const filesXml = searchFilesXml(path_xml)
-    const testCasesList = buildTestCaseList(path_xml, filesXml)
+
+    const pathFiles = pathList
+      .map((path) => searchFilesXml(path))
+
+    const testCasesList = pathFiles.map((pathFile) => {
+      return buildTestCaseList(pathFile.path, pathFile.files)
+    }).reduce((acc, testType) => acc.concat(testType), []);
+    
     const output = generateOuputJSON(testCasesList);
     const outputBase64 = parserJSONtoBase64(output) 
 
@@ -8323,8 +8329,8 @@ function buildTestCaseList(path, files){
   }
  */
 function generateOuputJSON(testcaseList) {
-  let username = getGithubUsernameData();
-  let repository = getGithubRepositoryNameData()
+  const username = getGithubUsernameData();
+  const repository = getGithubRepositoryNameData()
   return JSON.stringify({
     github_username: username,
     github_repository: repository,
@@ -8377,6 +8383,7 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
+   // [unit -> {}, instrumented -> {}]
   return testcaseList.map((testcase) => { 
     return getGrade(testcase.failures, testcase.name) 
   })
@@ -8425,7 +8432,6 @@ function generateObjectEvaluations(testcaseList) {
 module.exports = {
   generateObjectEvaluations,
   generateOuputJSON,
-  generateObjectEvaluations,
   getGrade,
   mapTestCase,
   mapValuesTestSuite,
@@ -8448,20 +8454,24 @@ const core = __nccwpck_require__(6964);
 
 /**
  * Retorna todos os arquivos xml's
- * @param {string} pathFiles Caminho dos arquivos xml
+ * @param {string} dirPath Caminho dos arquivos xml
  * @example searchFilesXml()
  * @output [ 'exemplo.xml' ]
  * 
  */
-function searchFilesXml(pathFiles) {
+function searchFilesXml(dirPath) {
   let files
   try {
-    core.info(`\u001b[38;5;6m[info] 📁 Buscando arquivos xml -> ${pathFiles}`)
-    files = fs.readdirSync(pathFiles)
+    core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
+    files = fs.readdirSync(dirPath)
     files = files.filter((file) => path.extname(file) === ".xml")
-    return files
+
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
+
+    return {files, path: dirPath}
   } catch (error) {
-    throw new Error(`Erro ao buscar por arquivos xml ->\n${error}`)
+    core.info(`\u001b[38;5;6m[info] 📭 Arquivos não encontrados -> ${dirPath}`)
+    return {files: [], path: dirPath}  
   }
 }
 
@@ -8513,7 +8523,7 @@ const core = __nccwpck_require__(6964);
 
 /**
  * Retorna valor da variavel de ambiente.
- * @example getGithubUsernameData(obj)
+ * @example getGithubUsernameData()
  */
  function getGithubUsernameData() {
   repository = process.env.INPUT_PR_AUTHOR_USERNAME;
@@ -8763,7 +8773,7 @@ const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
 core.info('\u001b[38;5;6m[info] ⚙️ Rodando avaliador');
 
-runStepsEvaluator(unitPath, instrumentedPath)
+runStepsEvaluator([unitPath, instrumentedPath])
 })();
 
 module.exports = __webpack_exports__;

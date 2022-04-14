@@ -9,26 +9,50 @@ describe('Evaluator Integration', () => {
         core.getInput.mockResolvedValue('teste_user');
     });
     
-    test('Must return a base64 string when parse a xml test result', () => {
-        const expected = runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo1'))
+    test('Must return a base64 string when parse multiple type test', () => {
+
+        const pathList = [
+            path.resolve(__dirname, '../test/res/exemplo2/instrumented'), 
+            path.resolve(__dirname, '../test/res/exemplo2/unit')
+        ]
+        const expected = runStepsEvaluator(pathList)
         const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 
         expect(decodedPayload.evaluations).toEqual([
-            { grade: 3, description: 'addition_isIcorrect' },
-            { grade: 3, description: 'addition_isCorrect' },
-            { grade: 3, description: 'addition_isCorrect_2' },
+            {"description": "sub_isCorrect", "grade": 3}, 
+            {"description": "addition_isIcorrect", "grade": 3}, 
+            {"description": "addition_isCorrect", "grade": 3}, 
+            {"description": "addition_isCorrect_2", "grade": 3}
         ])
     })
 
-    test('Must merge to xml file to generate a base64', () => {
-        const expected = runStepsEvaluator(path.resolve(__dirname, '../test/res/exemplo2'));
+    test('Must return a base64 string when parse only one type test', () => {
+        const pathList = [
+            path.resolve(__dirname, '../test/res/exemplo2/unit')
+        ]
+        const expected = runStepsEvaluator(pathList)
         const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 
         expect(decodedPayload.evaluations).toEqual([
             { grade: 3, description: 'addition_isIcorrect' },
             { grade: 3, description: 'addition_isCorrect' },
-            { grade: 3, description: 'addition_isCorrect_2' },
-            { grade: 3, description: 'sub_isCorrect' }
+            { grade: 3, description: 'addition_isCorrect_2' }
         ])
+    })
+
+    test('Must return a base64 string when parse only one type test', () => {
+        const pathList = [
+            path.resolve(__dirname, '../test/res/exemplo2')
+        ]
+        const expected = runStepsEvaluator(pathList)
+        const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
+
+        console.log(decodedPayload)
+
+        expect(decodedPayload).toEqual({
+            github_username: "",
+            github_repository: "",
+            evaluations: []
+        })
     })
 })

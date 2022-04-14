@@ -3,7 +3,7 @@ const core = require('@actions/core');
 
 /**
  * Retorna valor da variavel de ambiente.
- * @example getGithubUsernameData(obj)
+ * @example getGithubUsernameData()
  */
  function getGithubUsernameData() {
   repository = process.env.INPUT_PR_AUTHOR_USERNAME;

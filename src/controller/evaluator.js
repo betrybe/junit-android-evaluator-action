@@ -1,7 +1,7 @@
 const { loadFile, searchFilesXml } = require('./fileManager')
 const { parserXmlToObject } = require('./xmlParser')
 const core = require('@actions/core');
-
+const { getGithubUsernameData,  getGithubRepositoryNameData } = require('./util')
 require('dotenv').config()
 
 const APPROVED_GRADE = 3;
@@ -81,26 +81,6 @@ function generateOuputJSON(testcaseList) {
   })
 }
 
-
-/**
- * Retorna valor da variavel de ambiente.
- * @example getGithubUsernameData(obj)
- */
-function getGithubUsernameData() {
-  repository = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(repository) return repository;
-  else return core.getInput('pr_author_username', { required: true });
-}
-
-/**
- * Retorna valor da variavel de ambiente.
- * @example getGithubRepositoryNameData()
- */
-function getGithubRepositoryNameData() {
-  repository = process.env.GITHUB_REPOSITORY;
-  if(repository) return repository;
-  else return null;
-}
 
 /**
  * Para cada testcase retorna a estrutura com nota e descrição
@@ -195,8 +175,6 @@ module.exports = {
   generateObjectEvaluations,
   generateOuputJSON,
   generateObjectEvaluations,
-  getGithubRepositoryNameData,
-  getGithubRepositoryNameData, 
   getGrade,
   mapTestCase,
   mapValuesTestSuite,

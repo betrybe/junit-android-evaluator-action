@@ -25,9 +25,12 @@ runs:
           distribution: 'zulu'
           java-version: '11'
 
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
       - name: Run Intrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ true }}
+        if: ${{ false }}
         with:
           api-level: 29
           script: ./gradlew connectedCheck

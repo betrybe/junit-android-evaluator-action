@@ -30,7 +30,7 @@ runs:
 
       - name: Run Intrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ echo $(if test -d ./src/androidTest; then echo true; fi) }}
+        if: ${{ true }}
         with:
           api-level: 29
           script: ./gradlew connectedCheck

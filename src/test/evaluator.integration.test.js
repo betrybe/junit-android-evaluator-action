@@ -24,8 +24,10 @@ describe('Evaluator Integration', () => {
 
     test('Must return a base64 string when parse only one type test', () => {
         const pathList = [
-            path.resolve(__dirname, '../test/res/exemplo2/unit')
+            path.resolve(__dirname, '../test/res/exemplo3/unit'),
+            path.resolve(__dirname, '../test/res/exemplo3/instrumented')
         ]
+        
         const expected = runStepsEvaluator(pathList)
         const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
 

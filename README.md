@@ -4,6 +4,8 @@
 # Parser JUnit Actions
 
 Projeto em javascript responsável por processar saida de testes em junit e gerar estrutura conhecida para registrar notas e identificar requisitos.
+
+ncc build index.js --license licenses.txt
 ## Pré-requisitos
 
 Entrada deve ser testes em xml registrados com seguinte estrutura

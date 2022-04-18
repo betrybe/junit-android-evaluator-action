@@ -61,13 +61,12 @@ function buildTestCaseList(path, files){
 
 function getTestFiles(pathList) {
   const pathFiles = pathList.map((path) => searchFilesXml(path))
-  
-  const hasFile = pathFiles.some((path) => {
-    if(path.files.length > 0) return false
-    return true
+
+  const noFile = !pathFiles.find((path) => {
+    return path.files.length > 0
   })
 
-  if(hasFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
+  if(noFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
 
   return pathFiles
 }

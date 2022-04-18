@@ -8464,7 +8464,7 @@ const core = __nccwpck_require__(6964);
  * Retorna todos os arquivos xml's
  * @param {string} dirPath Caminho dos arquivos xml
  * @example searchFilesXml()
- * @output [ 'exemplo.xml' ]
+ * @output {files: [ 'exemplo.xml' ], path: dirPath} 
  * 
  */
 function searchFilesXml(dirPath) {
@@ -8776,8 +8776,10 @@ const { runStepsEvaluator } = __nccwpck_require__(1941)
 const core = __nccwpck_require__(6964);
 const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
+const username = core.getInput('pr_author_username', { required: true });
 
-core.info('\u001b[38;5;6m[info] ⚙️ Rodando avaliador');
+core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador -> ${username} `);
+
 
 runStepsEvaluator([unitPath, instrumentedPath])
 })();

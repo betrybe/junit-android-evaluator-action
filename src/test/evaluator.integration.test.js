@@ -39,7 +39,6 @@ describe('Evaluator Integration', () => {
     test('Must return a base64 string with evaluations array empty', () => {
         const pathList = [path.resolve(__dirname, '../test/res/empty_folder')]
         const expected = runStepsEvaluator(pathList)
-        console.log(expected)
 
         expect(expected.message).toContain('📭 Arquivos não encontrados ->')
     })    

@@ -8251,9 +8251,8 @@ exports.debug = debug; // for test
 
 const { loadFile, searchFilesXml } = __nccwpck_require__(3911)
 const { parserXmlToObject } = __nccwpck_require__(5369)
-const core = __nccwpck_require__(6964);
 const { getGithubUsernameData,  getGithubRepositoryNameData } = __nccwpck_require__(8536)
-__nccwpck_require__(4000).config()
+const core = __nccwpck_require__(6964);
 
 const APPROVED_GRADE = 3;
 const UNAPPROVED_GRADE = 1;
@@ -8272,10 +8271,7 @@ const UNAPPROVED_GRADE = 1;
  */
 function runStepsEvaluator(pathList) {
   try {
-
-    const pathFiles = pathList
-      .map((path) => searchFilesXml(path))
-
+    const pathFiles = getTestFiles(pathList)
     const testCasesList = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
     }).reduce((acc, testType) => acc.concat(testType), []);
@@ -8288,6 +8284,7 @@ function runStepsEvaluator(pathList) {
     return outputBase64
   } catch(error) {
     core.setFailed(`${error}`);
+    return error;
   }
 }
 
@@ -8311,6 +8308,19 @@ function buildTestCaseList(path, files){
     const objMapped = mapValuesTestSuite(testSuite);
     return objMapped.testcase
   }).reduce((acc, val) => acc.concat(val), []);
+}
+
+function getTestFiles(pathList) {
+  const pathFiles = pathList.map((path) => searchFilesXml(path))
+  
+  const hasFile = pathFiles.some((path) => {
+    if(path.files.length > 0) return false
+    return true
+  })
+
+  if(hasFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
+
+  return pathFiles
 }
 
 /**
@@ -8383,7 +8393,6 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
-   // [unit -> {}, instrumented -> {}]
   return testcaseList.map((testcase) => { 
     return getGrade(testcase.failures, testcase.name) 
   })
@@ -8460,18 +8469,16 @@ const core = __nccwpck_require__(6964);
  * 
  */
 function searchFilesXml(dirPath) {
-  let files
   try {
     core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
-    files = fs.readdirSync(dirPath)
+    
+    let files = fs.readdirSync(dirPath)
     files = files.filter((file) => path.extname(file) === ".xml")
-
     core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
-
-    return {files, path: dirPath}
+    
+    return {files, path: dirPath}  
   } catch (error) {
-    core.info(`\u001b[38;5;6m[info] 📭 Arquivos não encontrados -> ${dirPath}`)
-    return {files: [], path: dirPath}  
+    return {files: [], path: dirPath}
   }
 }
 
@@ -8526,9 +8533,9 @@ const core = __nccwpck_require__(6964);
  * @example getGithubUsernameData()
  */
  function getGithubUsernameData() {
-  repository = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(repository) return repository;
-  else return core.getInput('pr_author_username', { required: true });
+  username = core.getInput('pr_author_username', { required: true });
+  if(username) return username;
+  return process.env.INPUT_PR_AUTHOR_USERNAME;
 }
 
 /**
@@ -8538,7 +8545,7 @@ const core = __nccwpck_require__(6964);
 function getGithubRepositoryNameData() {
   repository = process.env.GITHUB_REPOSITORY;
   if(repository) return repository;
-  else return null;
+  return null;
 }
 
 

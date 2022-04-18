@@ -1,9 +1,6 @@
 name: 'JUnit evaluator'
 description: 'JUnit evaluator  action for Tryber projects in android'
 inputs:
-  pr_author_username:
-    description: 'Pull Request author username'
-    required: true
   unit_test:
     description: 'Unit test'
     required: false
@@ -12,6 +9,9 @@ inputs:
     description: 'Instrumented_test test'
     required: false
     default: "false"
+  pr_author_username:
+    description: 'Pull Request author username'
+    required: true
 
 outputs:
   result: 

@@ -50,5 +50,5 @@ runs:
           script: ./gradlew connectedCheck
 
       - name: Get JUnit results
-        run: node $GITHUB_ACTION_PATH/dist/index.js
+        run: INPUT_PR_AUTHOR_USERNAME=${{inputs.pr_author_username}} node $GITHUB_ACTION_PATH/dist/index.js
         shell: bash

@@ -21,6 +21,7 @@ runs:
   steps:
       - name: View PR author
         run: echo "This PR is opened by ${{ inputs.pr_author_username }} ."
+        shell: bash
 
       - name: Set up Nodejs 16
         uses: actions/setup-node@v3

@@ -6,9 +6,9 @@ const core = require('@actions/core');
  * @example getGithubUsernameData()
  */
  function getGithubUsernameData() {
-  repository = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(repository) return repository;
-  else return core.getInput('pr_author_username', { required: true });
+  username = core.getInput('pr_author_username', { required: true });
+  if(username) return username;
+  return process.env.INPUT_PR_AUTHOR_USERNAME;
 }
 
 /**
@@ -18,7 +18,7 @@ const core = require('@actions/core');
 function getGithubRepositoryNameData() {
   repository = process.env.GITHUB_REPOSITORY;
   if(repository) return repository;
-  else return null;
+  return null;
 }
 
 

@@ -11,18 +11,16 @@ const core = require('@actions/core');
  * 
  */
 function searchFilesXml(dirPath) {
-  let files
   try {
     core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
-    files = fs.readdirSync(dirPath)
+    
+    let files = fs.readdirSync(dirPath)
     files = files.filter((file) => path.extname(file) === ".xml")
-
     core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
-
-    return {files, path: dirPath}
+    
+    return {files, path: dirPath}  
   } catch (error) {
-    core.info(`\u001b[38;5;6m[info] 📭 Arquivos não encontrados -> ${dirPath}`)
-    return {files: [], path: dirPath}  
+    return {files: [], path: dirPath}
   }
 }
 

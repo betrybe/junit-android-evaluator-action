@@ -5,12 +5,8 @@ const path = require("path");
 jest.mock('@actions/core');
 
 describe('Evaluator Integration', () => {
-    beforeAll(() => {
-        core.getInput.mockResolvedValue('teste_user');
-    });
     
     test('Must return a base64 string when parse multiple type test', () => {
-
         const pathList = [
             path.resolve(__dirname, '../test/res/exemplo2/instrumented'), 
             path.resolve(__dirname, '../test/res/exemplo2/unit')
@@ -40,19 +36,11 @@ describe('Evaluator Integration', () => {
         ])
     })
 
-    test('Must return a base64 string when parse only one type test', () => {
-        const pathList = [
-            path.resolve(__dirname, '../test/res/exemplo2')
-        ]
+    test('Must return a base64 string with evaluations array empty', () => {
+        const pathList = [path.resolve(__dirname, '../test/res/empty_folder')]
         const expected = runStepsEvaluator(pathList)
-        const decodedPayload = JSON.parse(Buffer.from(expected, 'base64').toString('utf8'));
+        console.log(expected)
 
-        console.log(decodedPayload)
-
-        expect(decodedPayload).toEqual({
-            github_username: "",
-            github_repository: "",
-            evaluations: []
-        })
-    })
+        expect(expected.message).toContain('📭 Arquivos não encontrados ->')
+    })    
 })

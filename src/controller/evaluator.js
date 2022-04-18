@@ -1,8 +1,7 @@
 const { loadFile, searchFilesXml } = require('./fileManager')
 const { parserXmlToObject } = require('./xmlParser')
-const core = require('@actions/core');
 const { getGithubUsernameData,  getGithubRepositoryNameData } = require('./util')
-require('dotenv').config()
+const core = require('@actions/core');
 
 const APPROVED_GRADE = 3;
 const UNAPPROVED_GRADE = 1;
@@ -21,10 +20,7 @@ const UNAPPROVED_GRADE = 1;
  */
 function runStepsEvaluator(pathList) {
   try {
-
-    const pathFiles = pathList
-      .map((path) => searchFilesXml(path))
-
+    const pathFiles = getTestFiles(pathList)
     const testCasesList = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
     }).reduce((acc, testType) => acc.concat(testType), []);
@@ -37,6 +33,7 @@ function runStepsEvaluator(pathList) {
     return outputBase64
   } catch(error) {
     core.setFailed(`${error}`);
+    return error;
   }
 }
 
@@ -60,6 +57,19 @@ function buildTestCaseList(path, files){
     const objMapped = mapValuesTestSuite(testSuite);
     return objMapped.testcase
   }).reduce((acc, val) => acc.concat(val), []);
+}
+
+function getTestFiles(pathList) {
+  const pathFiles = pathList.map((path) => searchFilesXml(path))
+  
+  const hasFile = pathFiles.some((path) => {
+    if(path.files.length > 0) return false
+    return true
+  })
+
+  if(hasFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
+
+  return pathFiles
 }
 
 /**
@@ -132,7 +142,6 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
-   // [unit -> {}, instrumented -> {}]
   return testcaseList.map((testcase) => { 
     return getGrade(testcase.failures, testcase.name) 
   })

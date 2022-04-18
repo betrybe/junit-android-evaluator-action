@@ -4,6 +4,12 @@ inputs:
   pr_author_username:
     description: 'Pull Request author username'
     required: true
+  unit_test:
+    description: 'Unit test'
+    required: false
+  instrumented_test:
+    description: 'Instrumented_test test'
+    required: false
 
 outputs:
   result: 
@@ -11,7 +17,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-
       - name: Set up Nodejs 16
         uses: actions/setup-node@v3
         with:
@@ -26,16 +31,17 @@ runs:
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
 
-      - name: Run Intrumented tests
+      - name: Run Unit tests
+        if: ${{ inputs.unit_test }}
+        run: ./gradlew test
+        shell: bash
+
+      - name: Run Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ true }}
+        if: ${{ inputs.instrumented_test }}
         with:
           api-level: 29
-          script: ./gradlew connectedCheck && ./gradlew test
-
-      # - name: Run Unit tests
-      #   run: ./gradlew test
-      #   shell: bash
+          script: ./gradlew connectedCheck
 
       - name: Get JUnit results
         run: node $GITHUB_ACTION_PATH/dist/index.js

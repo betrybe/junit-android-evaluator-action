@@ -7,6 +7,7 @@ const core = require('@actions/core');
  */
  function getGithubUsernameData() {
   username = core.getInput('pr_author_username', { required: true });
+  core.info(`\u001b[38;5;6m[info] ⚙️ pr_author_username: ${username}`);
   if(username) return username;
   return process.env.INPUT_PR_AUTHOR_USERNAME;
 }

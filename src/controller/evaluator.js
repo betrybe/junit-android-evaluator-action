@@ -8,7 +8,7 @@ const UNAPPROVED_GRADE = 1;
 
 /**
  * Passo a passo
- * 1 - Busca por arquivox .xml dentro do diretorio path_xml
+ * 1 - Busca por arquivos .xml dentro do diretorio path_xml
  * 2 - Leitura do arquivo xml gerado apartir do comando gradle para construir testes.
  * 3 - Transformar o xml lido em objeto
  * 4 - Mapeia em objeto legivel de fácil manipulação.

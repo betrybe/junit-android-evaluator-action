@@ -4,11 +4,11 @@ inputs:
   unit_test:
     description: 'Unit test'
     required: false
-    default: "true"
+    default: true
   instrumented_test:
     description: 'Instrumented_test test'
     required: false
-    default: "false"
+    default: false
   pr_author_username:
     description: 'Pull Request author username'
     required: true

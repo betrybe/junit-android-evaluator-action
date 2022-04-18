@@ -4,11 +4,11 @@ inputs:
   unit_test:
     description: 'Unit test'
     required: false
-    default: true
+    default: 'true'
   instrumented_test:
     description: 'Instrumented_test test'
     required: false
-    default: false
+    default: 'false'
   pr_author_username:
     description: 'Pull Request author username'
     required: true
@@ -34,13 +34,13 @@ runs:
         uses: gradle/gradle-build-action@v2
 
       - name: Run Unit tests
-        if: ${{ inputs.unit_test }}
+        if: ${{ inputs.unit_test == 'true' }} 
         run: ./gradlew test
         shell: bash
 
       - name: Run Instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ inputs.instrumented_test }}
+        if: ${{ inputs.instrumented_test == 'true' }}
         with:
           api-level: 29
           script: ./gradlew connectedCheck

@@ -66,7 +66,7 @@ function getTestFiles(pathList) {
     return path.files.length > 0
   })
 
-  if(noFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
+  if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
 
   return pathFiles
 }

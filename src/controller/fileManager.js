@@ -20,6 +20,7 @@ function searchFilesXml(dirPath) {
     
     return {files, path: dirPath}  
   } catch (error) {
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0`)
     return {files: [], path: dirPath}
   }
 }

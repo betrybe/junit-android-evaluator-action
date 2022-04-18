@@ -8317,7 +8317,7 @@ function getTestFiles(pathList) {
     return path.files.length > 0
   })
 
-  if(noFile) throw new Error(`📭 Arquivos não encontrados -> ${pathList}`)
+  if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
 
   return pathFiles
 }
@@ -8477,6 +8477,7 @@ function searchFilesXml(dirPath) {
     
     return {files, path: dirPath}  
   } catch (error) {
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0`)
     return {files: [], path: dirPath}
   }
 }

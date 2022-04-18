@@ -42,6 +42,6 @@ describe('Evaluator Integration', () => {
         const pathList = [path.resolve(__dirname, '../test/res/empty_folder')]
         const expected = runStepsEvaluator(pathList)
 
-        expect(expected.message).toContain('📭 Arquivos não encontrados ->')
+        expect(expected.message).toContain('📭 Nenhum arquivo encontrado para ambos os testes ->')
     })    
 })

@@ -7,7 +7,7 @@ const core = require('@actions/core');
  * Retorna todos os arquivos xml's
  * @param {string} dirPath Caminho dos arquivos xml
  * @example searchFilesXml()
- * @output [ 'exemplo.xml' ]
+ * @output {files: [ 'exemplo.xml' ], path: dirPath} 
  * 
  */
 function searchFilesXml(dirPath) {

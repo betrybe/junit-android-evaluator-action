@@ -19,10 +19,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-      - name: View PR author
-        run: echo "This PR is opened by ${{ inputs.pr_author_username }} ."
-        shell: bash
-
       - name: Set up Nodejs 16
         uses: actions/setup-node@v3
         with:
@@ -50,7 +46,7 @@ runs:
           script: ./gradlew connectedCheck
 
       - name: Get JUnit results
-        run: INPUT_PR_AUTHOR_USERNAME=${{inputs.pr_author_username}} node $GITHUB_ACTION_PATH/dist/index.js
+        run: node $GITHUB_ACTION_PATH/dist/index.js
         shell: bash
         env:
           INPUT_PR_AUTHOR_USERNAME: ${{inputs.pr_author_username}}

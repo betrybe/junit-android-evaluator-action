@@ -1,4 +1,4 @@
-# 🤖 JUnit Android Evaluator [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml)
+# 🤖 JUnit Android Evaluator  [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml) [![node](./src/node.svg)](https://badges.aleen42.com/src/node.svg)
 
 Projeto em javascript responsável por processar os relatórios(xml) de testes unitários e instrumentados.
 
@@ -37,6 +37,7 @@ jobs:
           path: .github/actions/junit-android-evaluator
 
       - name: Run JUnit Android Evaluator
+        id: android-evaluator
         uses: ./.github/actions/junit-android-evaluator
         with:
           pr_author_username: ${{ github.event.pull_request.user.login }}
@@ -62,6 +63,8 @@ ncc build index.js --license licenses.txt
 
 ## Fluxo de execução
 
+#### 🧜‍♀️ Mermaid
+
 ```mermaid
   graph TD
       codigo[Código] -->|junit-android-action executa| nodejs(Setup Nodejs)
@@ -78,3 +81,5 @@ ncc build index.js --license licenses.txt
       base64 --> output(Retorna base64 no output: result)
       output --> END
 ```
+#### 🪄 Whimsical
+![Whimsical](doc/diagram.png)

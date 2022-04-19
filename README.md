@@ -1,34 +1,19 @@
-[![Junit-Android-Evaluator](https://img.shields.io/badge/Junit%20Android%20Evaluator-trybe-green.svg)](https://github.com/Naereen/badges)
- [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
+# 🤖 JUnit Android Evaluator [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml)
 
-# JUnit Android Evaluator 
+Projeto em javascript responsável por processar os relatórios(xml) de testes unitários e instrumentados.
 
-Projeto em javascript responsável por processar saída  resultante da execução de testes em junit e registrar notas no store evaluation.
 
-## Pré-requisitos
+## Inputs
 
-Entrada deve ser testes em xml registrados com seguinte estrutura
-
-```xml
-  <testsuite name="com.example.myapplication_teste.ExampleUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-24T12:26:35" hostname="vostro" time="0.001">
-    <properties/>
-    <testcase name="requisitos" classname="com.example.myapplication_teste.ExampleUnitTest" time="0.001"/>
-    <system-out><![CDATA[]]></system-out>
-    <system-err><![CDATA[]]></system-err>
-  </testsuite>
-```
-Este projeto foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
-
-## Status
-
-🚧 Em construção... 🚧
-
+  - `unit_test`: Variável responsável por determinar  a execução dos testes unitários. **`default: true`**
+  - `instrumented_test`:  Variável responsável por determinar a execução dos testes instrumentados. **`default: false`**
+  - `pr_author_username`: Nome do autor do pull request.
 
 ## Output 
   - ```result```
   Resultado em base 64 originário do arquivo JSON gerado apartir da execução dos testes em JUnit.
 
-## Configurando seu projeto para utilizar o parser 
+## Configurando seu projeto para utilizar o avaliador 
 
 Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
 ```yml
@@ -43,21 +28,53 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: Fetch JUnit Parser
+      - name: Fetch JUnit Android Evaluator
         uses: actions/checkout@v3
         with:
-          repository: betrybe/junit-parser-action
+          repository: betrybe/junit-android-evaluator
           ref: v1
           token: ${{ secrets.GIT_HUB_PAT }}
-          path: .github/actions/junit-parser-action
+          path: .github/actions/junit-android-evaluator
 
-      - name: Run JUnit Parser
-        uses: ./.github/actions/junit-parser-action
+      - name: Run JUnit Android Evaluator
+        uses: ./.github/actions/junit-android-evaluator
         with:
           pr_author_username: ${{ github.event.pull_request.user.login }}
 ```
+Para habilitar ou desabilitar a execução de um tipo de teste, basta passar via parâmetro no passo da execução do avaliador.
+```yml
+  - name: Run JUnit Android Evaluator
+    uses: ./.github/actions/junit-android-evaluator
+    with:
+      pr_author_username: ${{ github.event.pull_request.user.login }}
+      unit_test: false
+      instrumented_test: true
+```
 
 
+## Build
+
+Para não ter que rodar o `npm install` na execução da action, usamos o `vercel/ncc` para compilar o projeto em um único arquivo na pasta `dist`.
 ```bash
 ncc build index.js --license licenses.txt
+```
+
+
+## Fluxo de execução
+
+```mermaid
+  graph TD
+      codigo[Código] -->|junit-android-action executa| nodejs(Setup Nodejs)
+      nodejs --> jdk(Setup JDK)
+      jdk --> gradle(Gradle Cache)
+      gradle --> |Verifica input| unit{inputs.unit_test == true}
+      gradle --> |Verifica input| instrumented{inputs.instrumented_test == true}
+      unit --> |true| run(Executa Teste)
+      instrumented --> |true| run(Executa Teste)
+      unit --> |false| norun(Não executa o teste)
+      instrumented --> |false| norun(Não executa o teste)
+      run --> |Gera Ouput| parser(Executa avaliador)
+      parser --> base64(Gera base64)
+      base64 --> output(Retorna base64 no output: result)
+      output --> END
 ```

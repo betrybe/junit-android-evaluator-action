@@ -1,11 +1,10 @@
-[![Parser-Xml-Trybe](https://img.shields.io/badge/parser-trybe-green.svg)](https://github.com/Naereen/badges)
+[![Junit-Android-Evaluator](https://img.shields.io/badge/Junit%20Android%20Evaluator-trybe-green.svg)](https://github.com/Naereen/badges)
  [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
 
-# Parser JUnit Actions
+# JUnit Android Evaluator 
 
-Projeto em javascript responsável por processar saida de testes em junit e gerar estrutura conhecida para registrar notas e identificar requisitos.
+Projeto em javascript responsável por processar saída  resultante da execução de testes em junit e registrar notas no store evaluation.
 
-ncc build index.js --license licenses.txt
 ## Pré-requisitos
 
 Entrada deve ser testes em xml registrados com seguinte estrutura
@@ -18,12 +17,12 @@ Entrada deve ser testes em xml registrados com seguinte estrutura
     <system-err><![CDATA[]]></system-err>
   </testsuite>
 ```
-Este parser foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
+Este projeto foi implementado para trabalhar com **JUnit 4** e **JUnit 5**. 
 
 ## Status
 
 🚧 Em construção... 🚧
-Prova de conceito não esta em uso
+
 
 ## Output 
   - ```result```
@@ -33,20 +32,32 @@ Prova de conceito não esta em uso
 
 Para utilizar esta action é necessário adicionar ao ***.github/workflows/main.yml*** o seguinte trecho.
 ```yml
-runs: 
-  using: "composite"
-  steps: 
-    - name: Fetch JUnit Parser
-      uses: actions/checkout@v2
-      with:
-        repository: betrybe/junit-parser-action
-        ref: v1
-        token: ${{ inputs.github_pat }}
-        path: .github/actions/junit-parser-action
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  Tests:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Fetch JUnit Parser
+        uses: actions/checkout@v3
+        with:
+          repository: betrybe/junit-parser-action
+          ref: v1
+          token: ${{ secrets.GIT_HUB_PAT }}
+          path: .github/actions/junit-parser-action
 
       - name: Run JUnit Parser
         uses: ./.github/actions/junit-parser-action
         with:
-          test-path: 'app/build/outputs/androidTest-results/connected/'
+          pr_author_username: ${{ github.event.pull_request.user.login }}
 ```
 
+
+```bash
+ncc build index.js --license licenses.txt
+```

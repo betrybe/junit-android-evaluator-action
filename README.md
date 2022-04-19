@@ -1,4 +1,4 @@
-# 🤖 JUnit Android Evaluator  [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml) [![node](./src/node.svg)](https://badges.aleen42.com/src/node.svg)
+# 🤖 JUnit Android Evaluator  [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml)
 
 Projeto em javascript responsável por processar os relatórios(xml) de testes unitários e instrumentados.
 

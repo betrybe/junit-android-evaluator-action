@@ -1,5 +1,5 @@
 name: 'JUnit evaluator'
-description: 'JUnit evaluator  action for Tryber projects in android'
+description: 'JUnit evaluator for Tryber projects in android'
 inputs:
   unit_test:
     description: 'Unit test'

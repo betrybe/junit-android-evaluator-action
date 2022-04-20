@@ -1,4 +1,4 @@
-# 🤖 JUnit Android Evaluator  [![CI](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator/actions/workflows/main.yml)
+# 🤖 JUnit Android Evaluator Actions [![CI](https://github.com/betrybe/junit-android-evaluator-actions/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/betrybe/junit-android-evaluator-actions/actions/workflows/main.yml)
 
 Projeto em javascript responsável por processar os relatórios(xml) de testes unitários e instrumentados.
 
@@ -11,7 +11,7 @@ Projeto em javascript responsável por processar os relatórios(xml) de testes u
 
 ## Output 
   - ```result```
-  Resultado em base 64 originário do arquivo JSON gerado apartir da execução dos testes em JUnit.
+  Resultado em base 64 originário do arquivo JSON gerado a partir da execução dos testes em JUnit.
 
 ## Configurando seu projeto para utilizar o avaliador 
 
@@ -31,21 +31,21 @@ jobs:
       - name: Fetch JUnit Android Evaluator
         uses: actions/checkout@v3
         with:
-          repository: betrybe/junit-android-evaluator
+          repository: betrybe/junit-android-evaluator-actions
           ref: v1
           token: ${{ secrets.GIT_HUB_PAT }}
-          path: .github/actions/junit-android-evaluator
+          path: .github/actions/junit-android-evaluator-actions
 
       - name: Run JUnit Android Evaluator
         id: android-evaluator
-        uses: ./.github/actions/junit-android-evaluator
+        uses: ./.github/actions/junit-android-evaluator-actions
         with:
           pr_author_username: ${{ github.event.pull_request.user.login }}
 ```
 Para habilitar ou desabilitar a execução de um tipo de teste, basta passar via parâmetro no passo da execução do avaliador.
 ```yml
   - name: Run JUnit Android Evaluator
-    uses: ./.github/actions/junit-android-evaluator
+    uses: ./.github/actions/junit-android-evaluator-actions
     with:
       pr_author_username: ${{ github.event.pull_request.user.login }}
       unit_test: false

@@ -1,4 +1,4 @@
-const core = require('@actions/core');
+const core = require('@actions/core')
 
 /**
  * @param {string} unitTestOutput 
@@ -6,14 +6,14 @@ const core = require('@actions/core');
  * @returns {string}
  */
 function processingOutputTests(unitTestOutput, instrumentedTestOutput) {
-  try {
+	try {
 
-    core.info(`\u001b[48;5;6m[info] 🖇 Unindo outputs de testes instrumentados e testes unitários.`)
-    return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
+		core.info('\u001b[48;5;6m[info] 🖇 Unindo outputs de testes instrumentados e testes unitários.')
+		return generateObjectFromOutputs(unitTestOutput, instrumentedTestOutput)
 
-  } catch (error) {
-    core.setFailed(`${error}`);
-  }
+	} catch (error) {
+		core.setFailed(`${error}`)
+	}
 }
 
 
@@ -27,22 +27,16 @@ function processingOutputTests(unitTestOutput, instrumentedTestOutput) {
   }
  */
 function generateObjectFromOutputs(unitTestOut, instrumentedTestOut) {
-  try {
+	let unitTestObject = parserBase64ToObject(unitTestOut)
+	let instrumentedTestObject = parserBase64ToObject(instrumentedTestOut)
 
-    let unitTestObject = parserBase64ToObject(unitTestOut);
-    let instrumentedTestObject = parserBase64ToObject(instrumentedTestOut);
-  
-    let evaluationsList = concatOutputs(unitTestObject, instrumentedTestObject)
-  
-    return  { 
-      github_username: unitTestObject.github_username,
-      github_repository: unitTestObject.github_repository,
-      evaluations: evaluationsList
-    }
-  } catch (error) { 
-    throw error; 
-  }
-  
+	let evaluationsList = concatOutputs(unitTestObject, instrumentedTestObject)
+
+	return  { 
+		github_username: unitTestObject.github_username,
+		github_repository: unitTestObject.github_repository,
+		evaluations: evaluationsList
+	}
 }
 
 
@@ -57,11 +51,11 @@ function generateObjectFromOutputs(unitTestOut, instrumentedTestOut) {
  */
 function parserBase64ToObject(data) {
 
-  try {
-    return JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
-  }catch (_) {
-    throw new Error('Erro ao converter base 64 para objeto.');
-  }
+	try {
+		return JSON.parse(Buffer.from(data, 'base64').toString('utf8'))
+	}catch (_) {
+		throw new Error('Erro ao converter base 64 para objeto.')
+	}
 }
 
 /** 
@@ -75,14 +69,14 @@ function parserBase64ToObject(data) {
  * @returns {Array} [{grade: 1, description: 'descricao 1'}, {grade: 2, description: 'descricao 2'}]
  */
 function concatOutputs(objTest1, objTest2) {
-  try {
-    return objTest1.evaluations.concat(objTest2.evaluations) 
-  } catch (_) {
-    throw new Error('Erro ao unificar outputs.');
-  }
+	try {
+		return objTest1.evaluations.concat(objTest2.evaluations) 
+	} catch (_) {
+		throw new Error('Erro ao unificar outputs.')
+	}
 }
 
 module.exports = {
-  processingOutputTests,
-  generateObjectFromOutputs
+	processingOutputTests,
+	generateObjectFromOutputs
 }

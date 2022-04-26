@@ -8270,22 +8270,22 @@ const UNAPPROVED_GRADE = 1
  * @return {string}
  */
 function runStepsEvaluator(pathList) {
-	try {
-		const pathFiles = getTestFiles(pathList)
-		const testCasesList = pathFiles.map((pathFile) => {
-			return buildTestCaseList(pathFile.path, pathFile.files)
-		}).reduce((acc, testType) => acc.concat(testType), [])
+  try {
+    const pathFiles = getTestFiles(pathList)
+    const testCasesList = pathFiles.map((pathFile) => {
+      return buildTestCaseList(pathFile.path, pathFile.files)
+    }).reduce((acc, testType) => acc.concat(testType), [])
     
-		const output = generateOuputJSON(testCasesList)
-		const outputBase64 = parserJSONtoBase64(output) 
+    const output = generateOuputJSON(testCasesList)
+    const outputBase64 = parserJSONtoBase64(output) 
 
-		core.setOutput('result', outputBase64)
-		core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
-		return outputBase64
-	} catch(error) {
-		core.setFailed(`${error}`)
-		return error
-	}
+    core.setOutput('result', outputBase64)
+    core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
+    return outputBase64
+  } catch(error) {
+    core.setFailed(`${error}`)
+    return error
+  }
 }
 
 /**
@@ -8293,7 +8293,7 @@ function runStepsEvaluator(pathList) {
  * @returns {string}
  */
 function parserJSONtoBase64(content_json) {
-	return Buffer.from(content_json).toString('base64')
+  return Buffer.from(content_json).toString('base64')
 }
 
 /**
@@ -8302,24 +8302,24 @@ function parserJSONtoBase64(content_json) {
  * @returns {Object[]}
  */
 function buildTestCaseList(path, files){
-	return files.map((file) => {
-		const loadedFile = loadFile(`${path}/${file}`)
-		const testSuite = parserXmlToObject(loadedFile)
-		const objMapped = mapValuesTestSuite(testSuite)
-		return objMapped.testcase
-	}).reduce((acc, val) => acc.concat(val), [])
+  return files.map((file) => {
+    const loadedFile = loadFile(`${path}/${file}`)
+    const testSuite = parserXmlToObject(loadedFile)
+    const objMapped = mapValuesTestSuite(testSuite)
+    return objMapped.testcase
+  }).reduce((acc, val) => acc.concat(val), [])
 }
 
 function getTestFiles(pathList) {
-	const pathFiles = pathList.map((path) => searchFilesXml(path))
+  const pathFiles = pathList.map((path) => searchFilesXml(path))
 
-	const noFile = !pathFiles.find((path) => {
-		return path.files.length > 0
-	})
+  const noFile = !pathFiles.find((path) => {
+    return path.files.length > 0
+  })
 
-	if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
+  if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
 
-	return pathFiles
+  return pathFiles
 }
 
 /**
@@ -8338,13 +8338,13 @@ function getTestFiles(pathList) {
   }
  */
 function generateOuputJSON(testcaseList) {
-	const username = getGithubUsernameData()
-	const repository = getGithubRepositoryNameData()
-	return JSON.stringify({
-		github_username: username,
-		github_repository: repository,
-		evaluations: generateObjectEvaluations(testcaseList)
-	})
+  const username = getGithubUsernameData()
+  const repository = getGithubRepositoryNameData()
+  return JSON.stringify({
+    github_username: username,
+    github_repository: repository,
+    evaluations: generateObjectEvaluations(testcaseList)
+  })
 }
 
 
@@ -8364,10 +8364,10 @@ function generateOuputJSON(testcaseList) {
   }
  */
 function getGrade( failures, requirementDescription ) {
-	if(failures !== null && failures?.length > 0 ){
-		return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
-	}
-	else return { grade: APPROVED_GRADE, description: requirementDescription }
+  if(failures !== null && failures?.length > 0 ){
+    return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
+  }
+  else return { grade: APPROVED_GRADE, description: requirementDescription }
 }
 
 /**
@@ -8392,9 +8392,9 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
-	return testcaseList.map((testcase) => { 
-		return getGrade(testcase.failures, testcase.name) 
-	})
+  return testcaseList.map((testcase) => { 
+    return getGrade(testcase.failures, testcase.name) 
+  })
 }
 
 /**
@@ -8404,14 +8404,14 @@ function generateObjectEvaluations(testcaseList) {
  * @author Kátia Cibele
  */
 function mapTestCase(testcase) {
-	return testcase.map((item) => { 
-		return { 
-			name: item.$.name, 
-			classname: item.$.classname, 
-			time: item.$.time,
-			failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
-		}
-	})
+  return testcase.map((item) => { 
+    return { 
+      name: item.$.name, 
+      classname: item.$.classname, 
+      time: item.$.time,
+      failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+    }
+  })
 }
   
 /**
@@ -8422,28 +8422,28 @@ function mapTestCase(testcase) {
    */
 function mapValuesTestSuite(obj) {
     
-	return { 
-		name: obj.testsuite.$.name, 
-		tests: obj.testsuite.$.tests, 
-		skipped: obj.testsuite.$.skipped,
-		failures: obj.testsuite.$.failures,
-		errors: obj.testsuite.$.errors,
-		timestamp: obj.testsuite.$.timestamp,
-		hostname: obj.testsuite.$.hostname,
-		time: obj.testsuite.$.time,
-		testcase: mapTestCase(obj.testsuite.testcase)
-	}
+  return { 
+    name: obj.testsuite.$.name, 
+    tests: obj.testsuite.$.tests, 
+    skipped: obj.testsuite.$.skipped,
+    failures: obj.testsuite.$.failures,
+    errors: obj.testsuite.$.errors,
+    timestamp: obj.testsuite.$.timestamp,
+    hostname: obj.testsuite.$.hostname,
+    time: obj.testsuite.$.time,
+    testcase: mapTestCase(obj.testsuite.testcase)
+  }
   
 }
 
 module.exports = {
-	generateObjectEvaluations,
-	generateOuputJSON,
-	getGrade,
-	mapTestCase,
-	mapValuesTestSuite,
-	parserJSONtoBase64,
-	runStepsEvaluator
+  generateObjectEvaluations,
+  generateOuputJSON,
+  getGrade,
+  mapTestCase,
+  mapValuesTestSuite,
+  parserJSONtoBase64,
+  runStepsEvaluator
 }
 
 
@@ -8467,18 +8467,18 @@ const core = __nccwpck_require__(6024)
  * 
  */
 function searchFilesXml(dirPath) {
-	try {
-		core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
+  try {
+    core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
     
-		let files = fs.readdirSync(dirPath)
-		files = files.filter((file) => path.extname(file) === '.xml')
-		core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
+    let files = fs.readdirSync(dirPath)
+    files = files.filter((file) => path.extname(file) === '.xml')
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
     
-		return {files, path: dirPath}  
-	} catch (error) {
-		core.info('\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0')
-		return {files: [], path: dirPath}
-	}
+    return {files, path: dirPath}  
+  } catch (error) {
+    core.info('\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0')
+    return {files: [], path: dirPath}
+  }
 }
 
 /** 
@@ -8503,19 +8503,19 @@ function searchFilesXml(dirPath) {
 //     }); 
 // }
 function loadFile(pathFile) {
-	let xml_string
-	try {
-		xml_string = fs.readFileSync(pathFile, 'utf8')
-		return xml_string
-	} catch (error) {
-		throw new Error('Erro ao ler arquivo.')
-	}
+  let xml_string
+  try {
+    xml_string = fs.readFileSync(pathFile, 'utf8')
+    return xml_string
+  } catch (error) {
+    throw new Error('Erro ao ler arquivo.')
+  }
 
 }
 
 module.exports = {
-	loadFile,
-	searchFilesXml
+  loadFile,
+  searchFilesXml
 }
 
 
@@ -8532,9 +8532,9 @@ const core = __nccwpck_require__(6024)
  * @example getGithubUsernameData()
  */
 function getGithubUsernameData() {
-	const username = process.env.INPUT_PR_AUTHOR_USERNAME
-	if(username) return username
-	return core.getInput('pr_author_username', { required: true })
+  const username = process.env.INPUT_PR_AUTHOR_USERNAME
+  if(username) return username
+  return core.getInput('pr_author_username', { required: true })
 }
 
 /**
@@ -8542,15 +8542,15 @@ function getGithubUsernameData() {
  * @example getGithubRepositoryNameData()
  */
 function getGithubRepositoryNameData() {
-	const repository = process.env.GITHUB_REPOSITORY
-	if(repository) return repository
-	return null
+  const repository = process.env.GITHUB_REPOSITORY
+  if(repository) return repository
+  return null
 }
 
 
 module.exports = {
-	getGithubUsernameData,
-	getGithubRepositoryNameData
+  getGithubUsernameData,
+  getGithubRepositoryNameData
 }
 
 
@@ -8569,7 +8569,7 @@ const xml2js = __nccwpck_require__(9253)
  * @output string
  */
 function parserJSONtoBase64(content_json) {
-	return Buffer.from(content_json).toString('base64')
+  return Buffer.from(content_json).toString('base64')
 }
 
 /**
@@ -8602,24 +8602,24 @@ function parserJSONtoBase64(content_json) {
   }
  */
 function parserXmlToObject(xml_string) {
-	const parser = new xml2js.Parser()
-	let output = ''
-	if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
-	parser.parseString(xml_string, function(error, result) {
-		if(error === null) {
-			output = JSON.parse(JSON.stringify(result, null, 4))
-		}
-		else {
-			throw error
-		}
-	})
-	return output
+  const parser = new xml2js.Parser()
+  let output = ''
+  if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
+  parser.parseString(xml_string, function(error, result) {
+    if(error === null) {
+      output = JSON.parse(JSON.stringify(result, null, 4))
+    }
+    else {
+      throw error
+    }
+  })
+  return output
 }
 
 
 module.exports = {
-	parserXmlToObject,
-	parserJSONtoBase64
+  parserXmlToObject,
+  parserJSONtoBase64
 }
 
 

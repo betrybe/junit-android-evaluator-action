@@ -19,22 +19,22 @@ const UNAPPROVED_GRADE = 1
  * @return {string}
  */
 function runStepsEvaluator(pathList) {
-	try {
-		const pathFiles = getTestFiles(pathList)
-		const testCasesList = pathFiles.map((pathFile) => {
-			return buildTestCaseList(pathFile.path, pathFile.files)
-		}).reduce((acc, testType) => acc.concat(testType), [])
+  try {
+    const pathFiles = getTestFiles(pathList)
+    const testCasesList = pathFiles.map((pathFile) => {
+      return buildTestCaseList(pathFile.path, pathFile.files)
+    }).reduce((acc, testType) => acc.concat(testType), [])
     
-		const output = generateOuputJSON(testCasesList)
-		const outputBase64 = parserJSONtoBase64(output) 
+    const output = generateOuputJSON(testCasesList)
+    const outputBase64 = parserJSONtoBase64(output) 
 
-		core.setOutput('result', outputBase64)
-		core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
-		return outputBase64
-	} catch(error) {
-		core.setFailed(`${error}`)
-		return error
-	}
+    core.setOutput('result', outputBase64)
+    core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
+    return outputBase64
+  } catch(error) {
+    core.setFailed(`${error}`)
+    return error
+  }
 }
 
 /**
@@ -42,7 +42,7 @@ function runStepsEvaluator(pathList) {
  * @returns {string}
  */
 function parserJSONtoBase64(content_json) {
-	return Buffer.from(content_json).toString('base64')
+  return Buffer.from(content_json).toString('base64')
 }
 
 /**
@@ -51,24 +51,24 @@ function parserJSONtoBase64(content_json) {
  * @returns {Object[]}
  */
 function buildTestCaseList(path, files){
-	return files.map((file) => {
-		const loadedFile = loadFile(`${path}/${file}`)
-		const testSuite = parserXmlToObject(loadedFile)
-		const objMapped = mapValuesTestSuite(testSuite)
-		return objMapped.testcase
-	}).reduce((acc, val) => acc.concat(val), [])
+  return files.map((file) => {
+    const loadedFile = loadFile(`${path}/${file}`)
+    const testSuite = parserXmlToObject(loadedFile)
+    const objMapped = mapValuesTestSuite(testSuite)
+    return objMapped.testcase
+  }).reduce((acc, val) => acc.concat(val), [])
 }
 
 function getTestFiles(pathList) {
-	const pathFiles = pathList.map((path) => searchFilesXml(path))
+  const pathFiles = pathList.map((path) => searchFilesXml(path))
 
-	const noFile = !pathFiles.find((path) => {
-		return path.files.length > 0
-	})
+  const noFile = !pathFiles.find((path) => {
+    return path.files.length > 0
+  })
 
-	if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
+  if(noFile) throw new Error(`📭 Nenhum arquivo encontrado para ambos os testes -> ${pathList}`)
 
-	return pathFiles
+  return pathFiles
 }
 
 /**
@@ -87,13 +87,13 @@ function getTestFiles(pathList) {
   }
  */
 function generateOuputJSON(testcaseList) {
-	const username = getGithubUsernameData()
-	const repository = getGithubRepositoryNameData()
-	return JSON.stringify({
-		github_username: username,
-		github_repository: repository,
-		evaluations: generateObjectEvaluations(testcaseList)
-	})
+  const username = getGithubUsernameData()
+  const repository = getGithubRepositoryNameData()
+  return JSON.stringify({
+    github_username: username,
+    github_repository: repository,
+    evaluations: generateObjectEvaluations(testcaseList)
+  })
 }
 
 
@@ -113,10 +113,10 @@ function generateOuputJSON(testcaseList) {
   }
  */
 function getGrade( failures, requirementDescription ) {
-	if(failures !== null && failures?.length > 0 ){
-		return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
-	}
-	else return { grade: APPROVED_GRADE, description: requirementDescription }
+  if(failures !== null && failures?.length > 0 ){
+    return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
+  }
+  else return { grade: APPROVED_GRADE, description: requirementDescription }
 }
 
 /**
@@ -141,9 +141,9 @@ function getGrade( failures, requirementDescription ) {
   { grade: 3, description: 'addition_isCorrect' }]
  */
 function generateObjectEvaluations(testcaseList) {
-	return testcaseList.map((testcase) => { 
-		return getGrade(testcase.failures, testcase.name) 
-	})
+  return testcaseList.map((testcase) => { 
+    return getGrade(testcase.failures, testcase.name) 
+  })
 }
 
 /**
@@ -153,14 +153,14 @@ function generateObjectEvaluations(testcaseList) {
  * @author Kátia Cibele
  */
 function mapTestCase(testcase) {
-	return testcase.map((item) => { 
-		return { 
-			name: item.$.name, 
-			classname: item.$.classname, 
-			time: item.$.time,
-			failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
-		}
-	})
+  return testcase.map((item) => { 
+    return { 
+      name: item.$.name, 
+      classname: item.$.classname, 
+      time: item.$.time,
+      failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+    }
+  })
 }
   
 /**
@@ -171,28 +171,28 @@ function mapTestCase(testcase) {
    */
 function mapValuesTestSuite(obj) {
     
-	return { 
-		name: obj.testsuite.$.name, 
-		tests: obj.testsuite.$.tests, 
-		skipped: obj.testsuite.$.skipped,
-		failures: obj.testsuite.$.failures,
-		errors: obj.testsuite.$.errors,
-		timestamp: obj.testsuite.$.timestamp,
-		hostname: obj.testsuite.$.hostname,
-		time: obj.testsuite.$.time,
-		testcase: mapTestCase(obj.testsuite.testcase)
-	}
+  return { 
+    name: obj.testsuite.$.name, 
+    tests: obj.testsuite.$.tests, 
+    skipped: obj.testsuite.$.skipped,
+    failures: obj.testsuite.$.failures,
+    errors: obj.testsuite.$.errors,
+    timestamp: obj.testsuite.$.timestamp,
+    hostname: obj.testsuite.$.hostname,
+    time: obj.testsuite.$.time,
+    testcase: mapTestCase(obj.testsuite.testcase)
+  }
   
 }
 
 module.exports = {
-	generateObjectEvaluations,
-	generateOuputJSON,
-	getGrade,
-	mapTestCase,
-	mapValuesTestSuite,
-	parserJSONtoBase64,
-	runStepsEvaluator
+  generateObjectEvaluations,
+  generateOuputJSON,
+  getGrade,
+  mapTestCase,
+  mapValuesTestSuite,
+  parserJSONtoBase64,
+  runStepsEvaluator
 }
 
 

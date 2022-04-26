@@ -6,7 +6,7 @@ describe('File Manager', () => {
     const dirPath = `${__dirname}/res/exemplo1`
     const pathFiles = searchFilesXml(dirPath)
 
-    expect(pathFiles).toEqual({files: ["exemplo.xml"], path: dirPath})
+    expect(pathFiles).toEqual({files: ['exemplo.xml'], path: dirPath})
   })
 
   test('must return an array when directory does not exist', () => {

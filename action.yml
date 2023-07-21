@@ -35,7 +35,7 @@ runs:
 
       - name: Run Unit tests
         if: ${{ inputs.unit_test == 'true' }} 
-        run: ./gradlew test
+        run: ./gradlew test --info --continue
         shell: bash
 
       - name: Run Instrumented tests

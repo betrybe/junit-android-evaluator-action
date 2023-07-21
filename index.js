@@ -1,4 +1,5 @@
 const { runStepsEvaluator } = require('./src/controller/evaluator')
+const { spawn } = require('node:child_process');
 const core = require('@actions/core');
 const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 // const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
@@ -37,14 +38,6 @@ const runTestUnit = () => {
 const run = () => {
   core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
 
-  const myBooleanInput = process.env.INPUT_UNIT_TEST;
-
-  core.info(`\u001b[38;5;6m[info] process.env.INPUT_UNIT_TEST >>  ${typeof(myBooleanInput)}`)
-
-  if(process.env.INPUT_UNIT_TEST === true) {
-    runTestUnit()
-
-  }
   if(process.env.INPUT_UNIT_TEST === 'true') runTestUnit()
 }
 

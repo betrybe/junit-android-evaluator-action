@@ -1,7 +1,5 @@
-const { runStepsEvaluator } = require('./src/controller/evaluator')
-const core = require('@actions/core');
-const unitPath = 'app/build/test-results/testReleaseUnitTest/'
-// const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
+const { spawn } = require('child_process')
+const core = require('@actions/core')
 
 const runTestUnit = () => {
   const command = './gradlew test'
@@ -19,7 +17,7 @@ const runTestUnit = () => {
     childProcess.on('close', (code) => {
       core.info('\u001b[38;5;6m[info] Iniciando análise de testes unitários')
 
-      report = runStepsEvaluator([unitPath])
+      report = runStepsEvaluator()
       core.setOutput('result > test', report)
       core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${report}`)
       return report
@@ -30,15 +28,14 @@ const runTestUnit = () => {
     core.setFailed(`${error}`)
     return error
   }
-  
+
 }
+
 
 const run = () => {
-  if(core.getInput('unit_test') === true) runTestUnit()
+  runTestUnit()
 }
 
-core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
-
-run()
-
-// runStepsEvaluator([unitPath, instrumentedPath])
+module.exports = { 
+  run
+}

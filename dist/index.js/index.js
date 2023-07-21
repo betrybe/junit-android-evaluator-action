@@ -8811,11 +8811,11 @@ const runTestUnit = () => {
 const run = () => {
   core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
 
-  const myBooleanInput = core.getBooleanInput('unit_test', { required: true });
+  const myBooleanInput = process.env.INPUT_UNIT_TEST;
 
-  core.info(`\u001b[38;5;6m[info] core.getBooleanInput('unit_test', { required: true }) >>  ${myBooleanInput}`)
+  core.info(`\u001b[38;5;6m[info] process.env.INPUT_UNIT_TEST >>  ${myBooleanInput}`)
 
-  if(core.getInput('unit_test') === true) runTestUnit()
+  if(process.env.INPUT_UNIT_TEST === true) runTestUnit()
 }
 
 

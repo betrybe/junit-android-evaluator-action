@@ -45,3 +45,4 @@ runs:
         shell: bash
         env:
           INPUT_PR_AUTHOR_USERNAME: ${{inputs.pr_author_username}}
+          INPUT_UNIT_TEST: ${{inputs.unit_test}}

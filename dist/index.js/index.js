@@ -8811,7 +8811,9 @@ const runTestUnit = () => {
 const run = () => {
   core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
 
-  core.info(`\u001b[38;5;6m[info] core.getInput('unit_test'): ${core.getInput('unit_test')}`)
+  const myBooleanInput = core.getBooleanInput('unit_test', { required: true });
+
+  core.info(`\u001b[38;5;6m[info] core.getBooleanInput('unit_test', { required: true }) >>  ${myBooleanInput}`)
 
   if(core.getInput('unit_test') === true) runTestUnit()
 }

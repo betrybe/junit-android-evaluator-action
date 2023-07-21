@@ -8809,10 +8809,14 @@ const runTestUnit = () => {
 }
 
 const run = () => {
+  core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
+
+  core.info(`\u001b[38;5;6m[info] core.getInput('unit_test'): ${core.getInput('unit_test')}`)
+
   if(core.getInput('unit_test') === true) runTestUnit()
 }
 
-core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
+
 
 run()
 

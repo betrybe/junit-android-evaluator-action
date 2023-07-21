@@ -4,6 +4,7 @@ const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 // const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
 const runTestUnit = () => {
+  core.info(`\u001b[38;5;6m[info] - Rodando teste unitário`);
   const command = './gradlew test'
   const childProcess = spawn(command, { shell: true })
 
@@ -38,9 +39,13 @@ const run = () => {
 
   const myBooleanInput = process.env.INPUT_UNIT_TEST;
 
-  core.info(`\u001b[38;5;6m[info] process.env.INPUT_UNIT_TEST >>  ${myBooleanInput}`)
+  core.info(`\u001b[38;5;6m[info] process.env.INPUT_UNIT_TEST >>  ${typeof(myBooleanInput)}`)
 
-  if(process.env.INPUT_UNIT_TEST === true) runTestUnit()
+  if(process.env.INPUT_UNIT_TEST === true) {
+    runTestUnit()
+
+  }
+  if(process.env.INPUT_UNIT_TEST === 'true') runTestUnit()
 }
 
 

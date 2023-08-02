@@ -30,16 +30,16 @@ function runStepsEvaluator(pathList) {
 
     core.info(`\u001b[38;5;6m[info] 📑 Enviando output em base 64 -> 0`)
 
-    // const outputBase64 = "eyJnaXRodWJfdXNlcm5hbWUiOiAia2F0aWFjaWgiLAogImdpdGh1Yl9yZXBvc2l0b3J5IjogInNkLTAwMC1wcm9qZXRvLWFuZHJvaWQtdHJ5YmUtZ2VuaXVzLTIwMjMtMDctMzEtMDktMjMtMDAiLAogImV2YWx1YXRpb25zIjogW3siZ3JhZGUiOiAiMSIsICJkZXNjcmlwdGlvbiI6ICJHZW5pdXNMb2dpYyJ9XQp9IA==";
+    const outputBase64 = "eyJnaXRodWJfdXNlcm5hbWUiOiAia2F0aWFjaWgiLAogImdpdGh1Yl9yZXBvc2l0b3J5IjogInNkLTAwMC1wcm9qZXRvLWFuZHJvaWQtdHJ5YmUtZ2VuaXVzLTIwMjMtMDctMzEtMDktMjMtMDAiLAogImV2YWx1YXRpb25zIjogW3siZ3JhZGUiOiAiMSIsICJkZXNjcmlwdGlvbiI6ICJHZW5pdXNMb2dpYyJ9XQp9IA==";
 
-    const outputJSON = JSON.stringify({"github_username": "katiacih",
-    "github_repository": "sd-000-projeto-android-trybe-genius-2023-07-31-09-23-00",
-    "evaluations": [{"grade": "1", "description": "GeniusLogic"}]});
+    // const outputJSON = JSON.stringify({"github_username": "katiacih",
+    // "github_repository": "sd-000-projeto-android-trybe-genius-2023-07-31-09-23-00",
+    // "evaluations": [{"grade": "1", "description": "GeniusLogic"}]});
 
-    const outputBase64 = parserJSONtoBase64(outputJSON);
+    // const outputBase64 = parserJSONtoBase64(outputJSON);
 
     core.setOutput('result', outputBase64);
-    core.saveState('result', outputBase64);
+    // core.saveState('result', outputBase64);
     core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
     return outputBase64
   } catch(error) {

@@ -8279,6 +8279,8 @@ function runStepsEvaluator(pathList) {
     // const output = generateOuputJSON(testCasesList);
     // const outputBase64 = parserJSONtoBase64(output) 
 
+    core.info(`\u001b[38;5;6m[info] 📑 Enviando output em base 64 -> 0`)
+
     const outputBase64 = "eyJnaXRodWJfdXNlcm5hbWUiOiAia2F0aWFjaWgiLAogImdpdGh1Yl9yZXBvc2l0b3J5IjogInNkLTAwMC1wcm9qZXRvLWFuZHJvaWQtdHJ5YmUtZ2VuaXVzLTIwMjMtMDctMzEtMDktMjMtMDAiLAogImV2YWx1YXRpb25zIjogW3siZ3JhZGUiOiAiMSIsICJkZXNjcmlwdGlvbiI6ICJHZW5pdXNMb2dpYyJ9XQp9IA==";
 
     core.setOutput('result', outputBase64);

@@ -8290,6 +8290,7 @@ function runStepsEvaluator(pathList) {
     const outputBase64 = parserJSONtoBase64(outputJSON);
 
     core.setOutput('result', outputBase64);
+    core.saveState('result', outputBase64);
     core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
     return outputBase64
   } catch(error) {

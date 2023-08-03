@@ -30,9 +30,13 @@ function runStepsEvaluator(pathList) {
 
     // const outputBase64 = "eyJnaXRodWJfdXNlcm5hbWUiOiAia2F0aWFjaWgiLAogImdpdGh1Yl9yZXBvc2l0b3J5IjogInNkLTAwMC1wcm9qZXRvLWFuZHJvaWQtdHJ5YmUtZ2VuaXVzLTIwMjMtMDctMzEtMDktMjMtMDAiLAogImV2YWx1YXRpb25zIjogW3siZ3JhZGUiOiAiMSIsICJkZXNjcmlwdGlvbiI6ICJHZW5pdXNMb2dpYyJ9XQp9IA==";
 
+    // const enc = new Base64();
+    // const b64 = enc.urlEncode('some url data');
+
     const outputJSON = JSON.stringify({"github_username": "katiacih",
     "github_repository": "sd-000-projeto-android-trybe-genius-2023-07-31-09-23-00",
     "evaluations": [{"grade": "1", "description": "GeniusLogic"}]});
+    core.info(`\u001b[32;5;6m 🚀 BASE 64 -> ${outputJSON}`)
 
     const outputBase64 = parserJSONtoBase64(outputJSON);
     core.info(`\u001b[32;5;6m 🚀 BASE 64 -> ${outputBase64}`)

@@ -9400,7 +9400,7 @@ exports["default"] = _default;
 const { loadFile, searchFilesXml } = __nccwpck_require__(234)
 const { parserXmlToObject } = __nccwpck_require__(211)
 const { getGithubUsernameData,  getGithubRepositoryNameData } = __nccwpck_require__(4923)
-const core = __nccwpck_require__(299);
+const core = __nccwpck_require__(299)
 
 const APPROVED_GRADE = 3
 const UNAPPROVED_GRADE = 1
@@ -9632,12 +9632,12 @@ function searchFilesXml(dirPath) {
     core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
     
     let files = fs.readdirSync(dirPath)
-    files = files.filter((file) => path.extname(file) === '.xml')
+    files = files.filter((file) => path.extname(file) === ".xml")
     core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
     
     return {files, path: dirPath}  
   } catch (error) {
-    core.info('\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0')
+    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0`)
     return {files: [], path: dirPath}
   }
 }
@@ -9664,9 +9664,9 @@ function searchFilesXml(dirPath) {
 //     }); 
 // }
 function loadFile(pathFile) {
-  let xml_string
+  let xml_string;
   try {
-    xml_string = fs.readFileSync(pathFile, 'utf8')
+    xml_string = fs.readFileSync(pathFile, "utf8");
     return xml_string
   } catch (error) {
     throw new Error('Erro ao ler arquivo.')
@@ -9692,10 +9692,10 @@ const core = __nccwpck_require__(299);
  * Retorna valor da variavel de ambiente.
  * @example getGithubUsernameData()
  */
-function getGithubUsernameData() {
-  const username = process.env.INPUT_PR_AUTHOR_USERNAME
-  if(username) return username
-  return core.getInput('pr_author_username', { required: true })
+ function getGithubUsernameData() {
+  const username = process.env.INPUT_PR_AUTHOR_USERNAME;
+  if(username) return username;
+  return core.getInput('pr_author_username', { required: true });
 }
 
 /**
@@ -9703,9 +9703,9 @@ function getGithubUsernameData() {
  * @example getGithubRepositoryNameData()
  */
 function getGithubRepositoryNameData() {
-  const repository = process.env.GITHUB_REPOSITORY
-  if(repository) return repository
-  return null
+  const repository = process.env.GITHUB_REPOSITORY;
+  if(repository) return repository;
+  return null;
 }
 
 
@@ -9763,18 +9763,18 @@ function parserJSONtoBase64(content_json) {
   }
  */
 function parserXmlToObject(xml_string) {
-  const parser = new xml2js.Parser()
-  let output = ''
-  if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
+  const parser = new xml2js.Parser();
+  let output = "";
+  if(xml_string === null || xml_string  === undefined || xml_string === "" ) return new Error("Invalid xml for parsing.");
   parser.parseString(xml_string, function(error, result) {
     if(error === null) {
-      output = JSON.parse(JSON.stringify(result, null, 4))
+      output = JSON.parse(JSON.stringify(result, null, 4));
     }
     else {
-      throw error
+      throw error;
     }
-  })
-  return output
+  });
+  return output;
 }
 
 
@@ -9946,7 +9946,7 @@ const core = __nccwpck_require__(299);
 const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
-core.info('\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador')
+core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
 
 
 runStepsEvaluator([unitPath, instrumentedPath])

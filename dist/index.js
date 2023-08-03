@@ -9402,8 +9402,8 @@ const { parserXmlToObject } = __nccwpck_require__(211)
 const { getGithubUsernameData,  getGithubRepositoryNameData } = __nccwpck_require__(4923)
 const core = __nccwpck_require__(299);
 
-const APPROVED_GRADE = 3;
-const UNAPPROVED_GRADE = 1;
+const APPROVED_GRADE = 3
+const UNAPPROVED_GRADE = 1
 
 /**
  * Passo a passo
@@ -9444,8 +9444,8 @@ function runStepsEvaluator(pathList) {
     core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
     return outputBase64
   } catch(error) {
-    core.setFailed(`${error}`);
-    return error;
+    core.setFailed(`${error}`)
+    return error
   }
 }
 
@@ -9464,11 +9464,11 @@ function parserJSONtoBase64(content_json) {
  */
 function buildTestCaseList(path, files){
   return files.map((file) => {
-    const loadedFile = loadFile(`${path}/${file}`);
+    const loadedFile = loadFile(`${path}/${file}`)
     const testSuite = parserXmlToObject(loadedFile)
-    const objMapped = mapValuesTestSuite(testSuite);
+    const objMapped = mapValuesTestSuite(testSuite)
     return objMapped.testcase
-  }).reduce((acc, val) => acc.concat(val), []);
+  }).reduce((acc, val) => acc.concat(val), [])
 }
 
 function getTestFiles(pathList) {
@@ -9499,7 +9499,7 @@ function getTestFiles(pathList) {
   }
  */
 function generateOuputJSON(testcaseList) {
-  const username = getGithubUsernameData();
+  const username = getGithubUsernameData()
   const repository = getGithubRepositoryNameData()
   return JSON.stringify({
     github_username: username,
@@ -9564,39 +9564,38 @@ function generateObjectEvaluations(testcaseList) {
  * @example mapTestCase(testcase)
  * @author Kátia Cibele
  */
-  function mapTestCase(testcase) {
-    return testcase.map((item) => { 
-      return { 
-          name: item.$.name, 
-          classname: item.$.classname, 
-          time: item.$.time,
-          failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
-      }
-    })
-  }
+function mapTestCase(testcase) {
+  return testcase.map((item) => { 
+    return { 
+      name: item.$.name, 
+      classname: item.$.classname, 
+      time: item.$.time,
+      failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+    }
+  })
+}
   
-  /**
+/**
    * Mapea um objeto testsuite para analise
    * @param {object} obj
    * @example mapValues({})
    * @return {object}
    */
-  function mapValuesTestSuite(obj) {
+function mapValuesTestSuite(obj) {
     
-    return { 
-      name: obj.testsuite.$.name, 
-      tests: obj.testsuite.$.tests, 
-      skipped: obj.testsuite.$.skipped,
-      failures: obj.testsuite.$.failures,
-      errors: obj.testsuite.$.errors,
-      timestamp: obj.testsuite.$.timestamp,
-      hostname: obj.testsuite.$.hostname,
-      time: obj.testsuite.$.time,
-      skipped: obj.testsuite.$.skipped,
-      testcase: mapTestCase(obj.testsuite.testcase)
-    }
+  return { 
+    name: obj.testsuite.$.name, 
+    tests: obj.testsuite.$.tests, 
+    skipped: obj.testsuite.$.skipped,
+    failures: obj.testsuite.$.failures,
+    errors: obj.testsuite.$.errors,
+    timestamp: obj.testsuite.$.timestamp,
+    hostname: obj.testsuite.$.hostname,
+    time: obj.testsuite.$.time,
+    testcase: mapTestCase(obj.testsuite.testcase)
+  }
   
-  };
+}
 
 module.exports = {
   generateObjectEvaluations,
@@ -9633,12 +9632,12 @@ function searchFilesXml(dirPath) {
     core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
     
     let files = fs.readdirSync(dirPath)
-    files = files.filter((file) => path.extname(file) === ".xml")
+    files = files.filter((file) => path.extname(file) === '.xml')
     core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
     
     return {files, path: dirPath}  
   } catch (error) {
-    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0`)
+    core.info('\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0')
     return {files: [], path: dirPath}
   }
 }
@@ -9665,9 +9664,9 @@ function searchFilesXml(dirPath) {
 //     }); 
 // }
 function loadFile(pathFile) {
-  let xml_string;
+  let xml_string
   try {
-    xml_string = fs.readFileSync(pathFile, "utf8");
+    xml_string = fs.readFileSync(pathFile, 'utf8')
     return xml_string
   } catch (error) {
     throw new Error('Erro ao ler arquivo.')
@@ -9693,10 +9692,10 @@ const core = __nccwpck_require__(299);
  * Retorna valor da variavel de ambiente.
  * @example getGithubUsernameData()
  */
- function getGithubUsernameData() {
-  const username = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(username) return username;
-  return core.getInput('pr_author_username', { required: true });
+function getGithubUsernameData() {
+  const username = process.env.INPUT_PR_AUTHOR_USERNAME
+  if(username) return username
+  return core.getInput('pr_author_username', { required: true })
 }
 
 /**
@@ -9704,9 +9703,9 @@ const core = __nccwpck_require__(299);
  * @example getGithubRepositoryNameData()
  */
 function getGithubRepositoryNameData() {
-  const repository = process.env.GITHUB_REPOSITORY;
-  if(repository) return repository;
-  return null;
+  const repository = process.env.GITHUB_REPOSITORY
+  if(repository) return repository
+  return null
 }
 
 
@@ -9764,18 +9763,18 @@ function parserJSONtoBase64(content_json) {
   }
  */
 function parserXmlToObject(xml_string) {
-  const parser = new xml2js.Parser();
-  let output = "";
-  if(xml_string === null || xml_string  === undefined || xml_string === "" ) return new Error("Invalid xml for parsing.");
+  const parser = new xml2js.Parser()
+  let output = ''
+  if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
   parser.parseString(xml_string, function(error, result) {
     if(error === null) {
-      output = JSON.parse(JSON.stringify(result, null, 4));
+      output = JSON.parse(JSON.stringify(result, null, 4))
     }
     else {
-      throw error;
+      throw error
     }
-  });
-  return output;
+  })
+  return output
 }
 
 
@@ -9947,7 +9946,7 @@ const core = __nccwpck_require__(299);
 const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
-core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
+core.info('\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador')
 
 
 runStepsEvaluator([unitPath, instrumentedPath])

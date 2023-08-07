@@ -1,10 +1,11 @@
+const core = require('@actions/core')
+const Base64 = require('base64-string').Base64
 const { loadFile, searchFilesXml } = require('./fileManager')
 const { parserXmlToObject } = require('./xmlParser')
 const { getGithubUsernameData,  getGithubRepositoryNameData } = require('./util')
-const core = require('@actions/core');
 
-const APPROVED_GRADE = 3;
-const UNAPPROVED_GRADE = 1;
+const APPROVED_GRADE = 3
+const UNAPPROVED_GRADE = 1
 
 /**
  * Passo a passo
@@ -23,17 +24,14 @@ function runStepsEvaluator(pathList) {
     const pathFiles = getTestFiles(pathList)
     const testCasesList = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
-    }).reduce((acc, testType) => acc.concat(testType), []);
+    }).reduce((acc, testType) => acc.concat(testType), [])
     
-    const output = generateOuputJSON(testCasesList);
+    const output = generateOutputJSON(testCasesList)
     const outputBase64 = parserJSONtoBase64(output) 
-
-    core.setOutput('result', outputBase64);
-    core.notice(`\u001b[32;5;6m 🚀 Processo concluído -> ${outputBase64}`)
-    return outputBase64
+    
+    core.setOutput('result', outputBase64)
   } catch(error) {
-    core.setFailed(`${error}`);
-    return error;
+    core.setFailed(`Action failed with error: ${error}`)
   }
 }
 
@@ -42,7 +40,9 @@ function runStepsEvaluator(pathList) {
  * @returns {string}
  */
 function parserJSONtoBase64(content_json) {
-  return Buffer.from(content_json).toString('base64')
+  var enc = new Base64()
+  // return Buffer.from(content_json).toString('base64')
+  return enc.encode(content_json)
 }
 
 /**
@@ -52,11 +52,11 @@ function parserJSONtoBase64(content_json) {
  */
 function buildTestCaseList(path, files){
   return files.map((file) => {
-    const loadedFile = loadFile(`${path}/${file}`);
+    const loadedFile = loadFile(`${path}/${file}`)
     const testSuite = parserXmlToObject(loadedFile)
-    const objMapped = mapValuesTestSuite(testSuite);
+    const objMapped = mapValuesTestSuite(testSuite)
     return objMapped.testcase
-  }).reduce((acc, val) => acc.concat(val), []);
+  }).reduce((acc, val) => acc.concat(val), [])
 }
 
 function getTestFiles(pathList) {
@@ -75,7 +75,7 @@ function getTestFiles(pathList) {
  * Gera saida em json apartir de um objeto
  * TODO get github_username e github_repository
  * @param {*} testcaseList 
- * @example generateOuputJSON()
+ * @example generateOutputJSON()
  * @returns
  * {
     "github_username":"katiacih",
@@ -86,8 +86,8 @@ function getTestFiles(pathList) {
       ]
   }
  */
-function generateOuputJSON(testcaseList) {
-  const username = getGithubUsernameData();
+function generateOutputJSON(testcaseList) {
+  const username = getGithubUsernameData()
   const repository = getGithubRepositoryNameData()
   return JSON.stringify({
     github_username: username,
@@ -152,39 +152,38 @@ function generateObjectEvaluations(testcaseList) {
  * @example mapTestCase(testcase)
  * @author Kátia Cibele
  */
-  function mapTestCase(testcase) {
-    return testcase.map((item) => { 
-      return { 
-          name: item.$.name, 
-          classname: item.$.classname, 
-          time: item.$.time,
-          failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
-      }
-    })
-  }
+function mapTestCase(testcase) {
+  return testcase.map((item) => { 
+    return { 
+      name: item.$.name, 
+      classname: item.$.classname, 
+      time: item.$.time,
+      failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+    }
+  })
+}
   
-  /**
+/**
    * Mapea um objeto testsuite para analise
    * @param {object} obj
    * @example mapValues({})
    * @return {object}
    */
-  function mapValuesTestSuite(obj) {
+function mapValuesTestSuite(obj) {
     
-    return { 
-      name: obj.testsuite.$.name, 
-      tests: obj.testsuite.$.tests, 
-      skipped: obj.testsuite.$.skipped,
-      failures: obj.testsuite.$.failures,
-      errors: obj.testsuite.$.errors,
-      timestamp: obj.testsuite.$.timestamp,
-      hostname: obj.testsuite.$.hostname,
-      time: obj.testsuite.$.time,
-      skipped: obj.testsuite.$.skipped,
-      testcase: mapTestCase(obj.testsuite.testcase)
-    }
+  return { 
+    name: obj.testsuite.$.name, 
+    tests: obj.testsuite.$.tests, 
+    skipped: obj.testsuite.$.skipped,
+    failures: obj.testsuite.$.failures,
+    errors: obj.testsuite.$.errors,
+    timestamp: obj.testsuite.$.timestamp,
+    hostname: obj.testsuite.$.hostname,
+    time: obj.testsuite.$.time,
+    testcase: mapTestCase(obj.testsuite.testcase)
+  }
   
-  };
+}
 
 module.exports = {
   generateObjectEvaluations,

@@ -10020,14 +10020,14 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const { runStepsEvaluator } = __nccwpck_require__(8309)
-const core = __nccwpck_require__(6442);
+const core = __nccwpck_require__(6442)
 const unitPath = 'app/build/test-results/testReleaseUnitTest/'
 const instrumentedPath = 'app/build/outputs/androidTest-results/connected/'
 
-core.info(`\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador`);
-
+core.info('\u001b[38;5;6m[info] 🏃‍♂️ Rodando avaliador')
 
 runStepsEvaluator([unitPath, instrumentedPath])
+
 })();
 
 module.exports = __webpack_exports__;

@@ -41,7 +41,6 @@ function runStepsEvaluator(pathList) {
  */
 function parserJSONtoBase64(content_json) {
   var enc = new Base64()
-  // return Buffer.from(content_json).toString('base64')
   return enc.encode(content_json)
 }
 
@@ -187,7 +186,7 @@ function mapValuesTestSuite(obj) {
 
 module.exports = {
   generateObjectEvaluations,
-  generateOuputJSON,
+  generateOutputJSON,
   getGrade,
   mapTestCase,
   mapValuesTestSuite,

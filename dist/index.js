@@ -9511,27 +9511,19 @@ const UNAPPROVED_GRADE = 1
  * @return {string}
  */
 function runStepsEvaluator(pathList) {
-  // try {
-  // const pathFiles = getTestFiles(pathList)
-  // const testCasesList = pathFiles.map((pathFile) => {
-  //   return buildTestCaseList(pathFile.path, pathFile.files)
-  // }).reduce((acc, testType) => acc.concat(testType), []);
+  try {
+    const pathFiles = getTestFiles(pathList)
+    const testCasesList = pathFiles.map((pathFile) => {
+      return buildTestCaseList(pathFile.path, pathFile.files)
+    }).reduce((acc, testType) => acc.concat(testType), [])
     
-  // const output = generateOuputJSON(testCasesList);
-  // const outputBase64 = parserJSONtoBase64(output) 
+    const output = generateOutputJSON(testCasesList)
+    const outputBase64 = parserJSONtoBase64(output) 
     
-  const json = JSON.stringify({
-    github_username: getGithubUsernameData(),
-    github_repository_name: getGithubRepositoryNameData(),
-    evaluations: [{grade: '1', description: 'GeniusLogic'}],
-  })
-    
-  const outputBase64 = parserJSONtoBase64(json)
-    
-  core.setOutput('result', outputBase64)
-  // } catch(error) {
-  //   core.setFailed(`Action failed with error: ${error}`)
-  // }
+    core.setOutput('result', outputBase64)
+  } catch(error) {
+    core.setFailed(`Action failed with error: ${error}`)
+  }
 }
 
 /**
@@ -9540,7 +9532,6 @@ function runStepsEvaluator(pathList) {
  */
 function parserJSONtoBase64(content_json) {
   var enc = new Base64()
-  // return Buffer.from(content_json).toString('base64')
   return enc.encode(content_json)
 }
 
@@ -9574,7 +9565,7 @@ function getTestFiles(pathList) {
  * Gera saida em json apartir de um objeto
  * TODO get github_username e github_repository
  * @param {*} testcaseList 
- * @example generateOuputJSON()
+ * @example generateOutputJSON()
  * @returns
  * {
     "github_username":"katiacih",
@@ -9585,7 +9576,7 @@ function getTestFiles(pathList) {
       ]
   }
  */
-function generateOuputJSON(testcaseList) {
+function generateOutputJSON(testcaseList) {
   const username = getGithubUsernameData()
   const repository = getGithubRepositoryNameData()
   return JSON.stringify({
@@ -9686,7 +9677,7 @@ function mapValuesTestSuite(obj) {
 
 module.exports = {
   generateObjectEvaluations,
-  generateOuputJSON,
+  generateOutputJSON,
   getGrade,
   mapTestCase,
   mapValuesTestSuite,
@@ -9703,9 +9694,9 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-const fs = __nccwpck_require__(7147);
-const path = __nccwpck_require__(1017);
-const core = __nccwpck_require__(6442);
+const fs = __nccwpck_require__(7147)
+const path = __nccwpck_require__(1017)
+const core = __nccwpck_require__(6442)
 
 /**
  * Retorna todos os arquivos xml's
@@ -9719,12 +9710,12 @@ function searchFilesXml(dirPath) {
     core.info(`\u001b[38;5;6m[info] 🔍 Buscando arquivos xml -> ${dirPath}`)
     
     let files = fs.readdirSync(dirPath)
-    files = files.filter((file) => path.extname(file) === ".xml")
+    files = files.filter((file) => path.extname(file) === '.xml')
     core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> ${files.length}`)
     
     return {files, path: dirPath}  
   } catch (error) {
-    core.info(`\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0`)
+    core.info('\u001b[38;5;6m[info] 📑 Arquivos encontrados -> 0')
     return {files: [], path: dirPath}
   }
 }
@@ -9751,9 +9742,9 @@ function searchFilesXml(dirPath) {
 //     }); 
 // }
 function loadFile(pathFile) {
-  let xml_string;
+  let xml_string
   try {
-    xml_string = fs.readFileSync(pathFile, "utf8");
+    xml_string = fs.readFileSync(pathFile, 'utf8')
     return xml_string
   } catch (error) {
     throw new Error('Erro ao ler arquivo.')
@@ -9773,16 +9764,16 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 (__nccwpck_require__(3626).config)()
-const core = __nccwpck_require__(6442);
+const core = __nccwpck_require__(6442)
 
 /**
  * Retorna valor da variavel de ambiente.
  * @example getGithubUsernameData()
  */
- function getGithubUsernameData() {
-  const username = process.env.INPUT_PR_AUTHOR_USERNAME;
-  if(username) return username;
-  return core.getInput('pr_author_username', { required: true });
+function getGithubUsernameData() {
+  const username = process.env.INPUT_PR_AUTHOR_USERNAME
+  if(username) return username
+  return core.getInput('pr_author_username', { required: true })
 }
 
 /**
@@ -9790,9 +9781,9 @@ const core = __nccwpck_require__(6442);
  * @example getGithubRepositoryNameData()
  */
 function getGithubRepositoryNameData() {
-  const repository = process.env.GITHUB_REPOSITORY;
-  if(repository) return repository;
-  return null;
+  const repository = process.env.GITHUB_REPOSITORY
+  if(repository) return repository
+  return null
 }
 
 
@@ -9808,7 +9799,7 @@ module.exports = {
 /***/ 1253:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const xml2js = __nccwpck_require__(6193);
+const xml2js = __nccwpck_require__(6193)
 
 /**
  * Transforma objeto json in base64
@@ -9850,18 +9841,18 @@ function parserJSONtoBase64(content_json) {
   }
  */
 function parserXmlToObject(xml_string) {
-  const parser = new xml2js.Parser();
-  let output = "";
-  if(xml_string === null || xml_string  === undefined || xml_string === "" ) return new Error("Invalid xml for parsing.");
+  const parser = new xml2js.Parser()
+  let output = ''
+  if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
   parser.parseString(xml_string, function(error, result) {
     if(error === null) {
-      output = JSON.parse(JSON.stringify(result, null, 4));
+      output = JSON.parse(JSON.stringify(result, null, 4))
     }
     else {
-      throw error;
+      throw error
     }
-  });
-  return output;
+  })
+  return output
 }
 
 

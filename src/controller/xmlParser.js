@@ -1,4 +1,4 @@
-const xml2js = require('xml2js');
+const xml2js = require('xml2js')
 
 /**
  * Transforma objeto json in base64
@@ -40,18 +40,18 @@ function parserJSONtoBase64(content_json) {
   }
  */
 function parserXmlToObject(xml_string) {
-  const parser = new xml2js.Parser();
-  let output = "";
-  if(xml_string === null || xml_string  === undefined || xml_string === "" ) return new Error("Invalid xml for parsing.");
+  const parser = new xml2js.Parser()
+  let output = ''
+  if(xml_string === null || xml_string  === undefined || xml_string === '' ) return new Error('Invalid xml for parsing.')
   parser.parseString(xml_string, function(error, result) {
     if(error === null) {
-      output = JSON.parse(JSON.stringify(result, null, 4));
+      output = JSON.parse(JSON.stringify(result, null, 4))
     }
     else {
-      throw error;
+      throw error
     }
-  });
-  return output;
+  })
+  return output
 }
 
 

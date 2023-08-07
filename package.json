@@ -8,16 +8,19 @@
     "start": "node index.js",
     "debug": "nodemon --inspect index.js",
     "watch": "nodemon index.js",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --fix ."
   },
   "author": "Katia Cibele",
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "dotenv": "^16.0.0",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "base64-string": "^1.1.2"
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
     "jest": "^27.5.1"
   }
 }

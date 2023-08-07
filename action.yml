@@ -1,28 +1,30 @@
-name: 'JUnit evaluator'
-description: 'JUnit evaluator for Tryber projects in android'
+name: "JUnit evaluator"
+description: "JUnit evaluator for Tryber projects in android"
 inputs:
   unit_test:
-    description: 'Unit test'
+    description: "Unit test"
     required: false
-    default: 'true'
+    default: "true"
   instrumented_test:
-    description: 'Instrumented_test test'
+    description: "Instrumented_test test"
     required: false
-    default: 'false'
+    default: "false"
   pr_author_username:
-    description: 'Pull Request author username'
+    description: "Pull Request author username"
     required: true
 
 outputs:
-  result: 
-    description: 'JUnit unit tests JSON results in base64 format'
+  result:
+    description: "JUnit unit tests JSON results in base64 format"
+    value: ${{ steps.get_junit_results.outputs.result }}
+
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-      - name: Set up Nodejs 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+    - name: Set up Nodejs 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -30,23 +32,24 @@ runs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
+    - name: Gradle cache
+      uses: gradle/gradle-build-action@v2
 
-      - name: Run Unit tests
-        if: ${{ inputs.unit_test == 'true' }} 
-        run: ./gradlew test
-        shell: bash
+    - name: Run Unit tests
+      if: ${{ inputs.unit_test == 'true' }}
+      run: ./gradlew test
+      shell: bash
 
-      - name: Run Instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2
-        if: ${{ inputs.instrumented_test == 'true' }}
-        with:
-          api-level: 29
-          script: ./gradlew connectedCheck
+    - name: Run Instrumented tests
+      uses: reactivecircus/android-emulator-runner@v2
+      if: ${{ inputs.instrumented_test == 'true' }}
+      with:
+        api-level: 29
+        script: ./gradlew connectedCheck
 
-      - name: Get JUnit results
-        run: node $GITHUB_ACTION_PATH/dist/index.js
-        shell: bash
-        env:
-          INPUT_PR_AUTHOR_USERNAME: ${{inputs.pr_author_username}}
+    - name: Get JUnit results
+      id: get_junit_results
+      run: node $GITHUB_ACTION_PATH/dist/index.js
+      shell: bash
+      env:
+        INPUT_PR_AUTHOR_USERNAME: ${{inputs.pr_author_username}}

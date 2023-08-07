@@ -21,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check StyleGuide
+        run: npm run lint
+
       - name: Run Test
         run: npm test

@@ -22,6 +22,8 @@ const UNAPPROVED_GRADE = 1
 function runStepsEvaluator(pathList) {
   try {
     const pathFiles = getTestFiles(pathList)
+    console.log('pathFiles')
+    console.log(pathFiles)
     const testCasesList = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
     }).reduce((acc, testType) => acc.concat(testType), [])
@@ -30,6 +32,8 @@ function runStepsEvaluator(pathList) {
     const outputBase64 = parserJSONtoBase64(output) 
     
     core.setOutput('result', outputBase64)
+    
+    core.info('\u001b[38;5;6m[info] 🏃‍♂️ Avaliador finalizado')
   } catch(error) {
     core.setFailed(`Action failed with error: ${error}`)
   }
@@ -53,6 +57,8 @@ function buildTestCaseList(path, files){
   return files.map((file) => {
     const loadedFile = loadFile(`${path}/${file}`)
     const testSuite = parserXmlToObject(loadedFile)
+    console.log('testando...')
+    console.log(testSuite)
     const objMapped = mapValuesTestSuite(testSuite)
     return objMapped.testcase
   }).reduce((acc, val) => acc.concat(val), [])

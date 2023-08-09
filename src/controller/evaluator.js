@@ -76,10 +76,11 @@ function convertTestCasesToJSON(testCases) {
 }
 
 function getGrade(failures, requirementDescription) {
-  if (failures !== null && failures?.length > 0 ) {
+  if (failures && failures.length > 0) {
     return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
   }
-  else return { grade: APPROVED_GRADE, description: requirementDescription }
+  
+  return { grade: APPROVED_GRADE, description: requirementDescription }
 }
 
 function generateEvaluations(testCases) {
@@ -90,11 +91,15 @@ function generateEvaluations(testCases) {
 
 function mapTestCase(testCase) {
   return testCase.map((item) => { 
+    const failures = item.failure || []
+    
     return { 
       name: item.$.name, 
       classname: item.$.classname, 
       time: item.$.time,
-      failures: item.failure === undefined || item.failure?.length > 0 ? null : item.failure.map((fail) => { return { message: fail.$.message, type: fail.$.type }})
+      failures: failures.map((fail) => {
+        return { message: fail.$.message, type: fail.$.type }
+      })
     }
   })
 }

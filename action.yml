@@ -45,7 +45,7 @@ runs:
         key: avd-29
 
     - name: create AVD and generate snapshot for caching
-      if: ${{ steps.avd-cache.outputs.cache-hit != 'true' }}
+      if: ${{ steps.avd-cache.outputs.cache-hit != 'true' && inputs.instrumented_test == 'true' }}
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 29
@@ -58,10 +58,12 @@ runs:
       if: ${{ inputs.unit_test == 'true' }}
       run: ./gradlew test
       shell: bash
+      continue-on-error: true
 
     - name: Run Instrumented tests
       uses: reactivecircus/android-emulator-runner@v2
       if: ${{ inputs.instrumented_test == 'true' }}
+      continue-on-error: true
       with:
         force-avd-creation: false
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none

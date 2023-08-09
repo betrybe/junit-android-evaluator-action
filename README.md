@@ -37,7 +37,7 @@ jobs:
           path: .github/actions/junit-android-evaluator-action
 
       - name: Run JUnit Android Evaluator
-        id: android-evaluator
+        id: evaluator
         uses: ./.github/actions/junit-android-evaluator-action
         with:
           pr_author_username: ${{ github.event.pull_request.user.login }}
@@ -45,6 +45,7 @@ jobs:
 Para habilitar ou desabilitar a execução de um tipo de teste, basta passar via parâmetro no passo da execução do avaliador.
 ```yml
   - name: Run JUnit Android Evaluator
+    id: evaluator
     uses: ./.github/actions/junit-android-evaluator-action
     with:
       pr_author_username: ${{ github.event.pull_request.user.login }}

@@ -1,16 +1,6 @@
 const xml2js = require('xml2js')
 
 /**
- * Transforma objeto json in base64
- * @param {string} content_json
- * @example parserJSONtoBase64(content_json)
- * @output string
- */
-function parserJSONtoBase64(content_json) {
-  return Buffer.from(content_json).toString('base64')
-}
-
-/**
  * Transforma xml em object
  * @param {string} xml_string
  * @example loadFileUsingUrl("<?xml version="1.0" encoding="UTF-8"?>
@@ -54,10 +44,8 @@ function parserXmlToObject(xml_string) {
   return output
 }
 
-
 module.exports = {
-  parserXmlToObject,
-  parserJSONtoBase64
+  parserXmlToObject
 }
 
 

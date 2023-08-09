@@ -9493,7 +9493,7 @@ const core = __nccwpck_require__(6442)
 const Base64 = (__nccwpck_require__(835)/* .Base64 */ .D)
 const { loadFile, searchFilesXml } = __nccwpck_require__(9078)
 const { parserXmlToObject } = __nccwpck_require__(1253)
-const { getGithubUsernameData,  getGithubRepositoryNameData } = __nccwpck_require__(1911)
+const { getGithubUsernameData, getGithubRepositoryNameData } = __nccwpck_require__(1911)
 
 const APPROVED_GRADE = 3
 const UNAPPROVED_GRADE = 1
@@ -9513,33 +9513,27 @@ const UNAPPROVED_GRADE = 1
 function runStepsEvaluator(pathList) {
   try {
     const pathFiles = getTestFiles(pathList)
-    const testCasesList = pathFiles.map((pathFile) => {
+    
+    const testCases = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
     }).reduce((acc, testType) => acc.concat(testType), [])
     
-    const output = generateOutputJSON(testCasesList)
-    const outputBase64 = parserJSONtoBase64(output) 
+    const testCasesJSON = convertTestCasesToJSON(testCases)
+    const testCasesInBase64 = convertTestCasesToBase64(testCasesJSON) 
     
-    core.setOutput('result', outputBase64)
+    core.setOutput('result', testCasesInBase64)
+    
+    core.info('\u001b[38;5;6m[info] ✅ Avaliador finalizado.')
   } catch(error) {
     core.setFailed(`Action failed with error: ${error}`)
   }
 }
 
-/**
- * @param {Object} content_json 
- * @returns {string}
- */
-function parserJSONtoBase64(content_json) {
+function convertTestCasesToBase64(testCasesJSON) {
   var enc = new Base64()
-  return enc.encode(content_json)
+  return enc.encode(testCasesJSON)
 }
 
-/**
- * @param {string} path 
- * @param {string[]} files 
- * @returns {Object[]}
- */
 function buildTestCaseList(path, files){
   return files.map((file) => {
     const loadedFile = loadFile(`${path}/${file}`)
@@ -9561,89 +9555,32 @@ function getTestFiles(pathList) {
   return pathFiles
 }
 
-/**
- * Gera saida em json apartir de um objeto
- * TODO get github_username e github_repository
- * @param {*} testcaseList 
- * @example generateOutputJSON()
- * @returns
- * {
-    "github_username":"katiacih",
-    "github_repository":"project_test_example",     
-      "evaluations":[
-        {"grade":1,"description":"addition_isIncorrect"},
-        {"grade":3,"description":"addition_isCorrect"}
-      ]
-  }
- */
-function generateOutputJSON(testcaseList) {
+
+function convertTestCasesToJSON(testCases) {
   const username = getGithubUsernameData()
   const repository = getGithubRepositoryNameData()
   return JSON.stringify({
     github_username: username,
     github_repository: repository,
-    evaluations: generateObjectEvaluations(testcaseList)
+    evaluations: generateEvaluations(testCases)
   })
 }
 
-
-/**
- * Para cada testcase retorna a estrutura com nota e descrição
- * @param {*} failures  Lista de failures do requisito.
- * @param {*} requirementDescription  Descrição do requisito.
- * @example getGrade( [ 
-  {
-    message: 'java.lang.AssertionError: expected:<7> but was:<8>',
-    type: 'java.lang.AssertionError'
-  }
-], "Description ...")
- * @returns {
-    grade: UNAPPROVED_GRADE | APPROVED_GRADE,
-    description: ""
-  }
- */
-function getGrade( failures, requirementDescription ) {
-  if(failures !== null && failures?.length > 0 ){
+function getGrade(failures, requirementDescription) {
+  if (failures !== null && failures?.length > 0 ) {
     return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
   }
   else return { grade: APPROVED_GRADE, description: requirementDescription }
 }
 
-/**
- * Dado uma lista de testcases monta a estrutura com ojeto para gerar output
- * @param {*} testcaseList  Lista de testcases
- * @example generateObjectEvaluations([
-  {
-    name: 'addition_isIcorrect',
-    classname: 'com.example.myapplication_teste.ExampleUnitTest',
-    time: '0.004',
-    failures: [ [Object] ]
-  },
-  {
-    name: 'addition_isCorrect',
-    classname: 'com.example.myapplication_teste.ExampleUnitTest',
-    time: '0.0',
-    failures: null
-  }
-  ])
-* @returns  [
-  { grade: 1, description: 'addition_isIcorrect' },
-  { grade: 3, description: 'addition_isCorrect' }]
- */
-function generateObjectEvaluations(testcaseList) {
-  return testcaseList.map((testcase) => { 
-    return getGrade(testcase.failures, testcase.name) 
+function generateEvaluations(testCases) {
+  return testCases.map((testCase) => { 
+    return getGrade(testCase.failures, testCase.name) 
   })
 }
 
-/**
- * Mapea um objeto testcase para analise
- * @param {obj} testcase
- * @example mapTestCase(testcase)
- * @author Kátia Cibele
- */
-function mapTestCase(testcase) {
-  return testcase.map((item) => { 
+function mapTestCase(testCase) {
+  return testCase.map((item) => { 
     return { 
       name: item.$.name, 
       classname: item.$.classname, 
@@ -9653,14 +9590,7 @@ function mapTestCase(testcase) {
   })
 }
   
-/**
-   * Mapea um objeto testsuite para analise
-   * @param {object} obj
-   * @example mapValues({})
-   * @return {object}
-   */
 function mapValuesTestSuite(obj) {
-    
   return { 
     name: obj.testsuite.$.name, 
     tests: obj.testsuite.$.tests, 
@@ -9672,27 +9602,17 @@ function mapValuesTestSuite(obj) {
     time: obj.testsuite.$.time,
     testcase: mapTestCase(obj.testsuite.testcase)
   }
-  
 }
 
 module.exports = {
-  generateObjectEvaluations,
-  generateOutputJSON,
-  getGrade,
-  mapTestCase,
-  mapValuesTestSuite,
-  parserJSONtoBase64,
   runStepsEvaluator
 }
-
-
 
 
 /***/ }),
 
 /***/ 9078:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
 
 const fs = __nccwpck_require__(7147)
 const path = __nccwpck_require__(1017)
@@ -9802,16 +9722,6 @@ module.exports = {
 const xml2js = __nccwpck_require__(6193)
 
 /**
- * Transforma objeto json in base64
- * @param {string} content_json
- * @example parserJSONtoBase64(content_json)
- * @output string
- */
-function parserJSONtoBase64(content_json) {
-  return Buffer.from(content_json).toString('base64')
-}
-
-/**
  * Transforma xml em object
  * @param {string} xml_string
  * @example loadFileUsingUrl("<?xml version="1.0" encoding="UTF-8"?>
@@ -9855,10 +9765,8 @@ function parserXmlToObject(xml_string) {
   return output
 }
 
-
 module.exports = {
-  parserXmlToObject,
-  parserJSONtoBase64
+  parserXmlToObject
 }
 
 

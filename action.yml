@@ -42,7 +42,8 @@ runs:
         path: |
           ~/.android/avd/*
           ~/.android/adb*
-        key: avd-29
+        key: avd-29-${{ runner.os }}
+        restore-keys: avd-29-
 
     - name: create AVD and generate snapshot for caching
       if: ${{ steps.avd-cache.outputs.cache-hit != 'true' && inputs.instrumented_test == 'true' }}

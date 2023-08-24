@@ -9555,10 +9555,10 @@ function getTestFiles(pathList) {
   return pathFiles
 }
 
-
 function convertTestCasesToJSON(testCases) {
   const username = getGithubUsernameData()
   const repository = getGithubRepositoryNameData()
+  
   return JSON.stringify({
     github_username: username,
     github_repository: repository,
@@ -9566,31 +9566,11 @@ function convertTestCasesToJSON(testCases) {
   })
 }
 
-function getGrade(failures, requirementDescription) {
-  if (failures && failures.length > 0) {
-    return { grade: UNAPPROVED_GRADE,  description: requirementDescription }
-  }
-  
-  return { grade: APPROVED_GRADE, description: requirementDescription }
-}
-
 function generateEvaluations(testCases) {
   return testCases.map((testCase) => { 
-    return getGrade(testCase.failures, testCase.name) 
-  })
-}
-
-function mapTestCase(testCase) {
-  return testCase.map((item) => { 
-    const failures = item.failure || []
-    
-    return { 
-      name: item.$.name, 
-      classname: item.$.classname, 
-      time: item.$.time,
-      failures: failures.map((fail) => {
-        return { message: fail.$.message, type: fail.$.type }
-      })
+    return {
+      description: testCase.name,
+      grade: testCase.failures.length > 0 ? UNAPPROVED_GRADE : APPROVED_GRADE
     }
   })
 }
@@ -9607,6 +9587,17 @@ function mapValuesTestSuite(obj) {
     time: obj.testsuite.$.time,
     testcase: mapTestCase(obj.testsuite.testcase)
   }
+}
+
+function mapTestCase(testCase) {
+  return testCase.map((item) => {     
+    return { 
+      name: item.$.name, 
+      classname: item.$.classname, 
+      time: item.$.time,
+      failures: item.failure || []
+    }
+  })
 }
 
 module.exports = {

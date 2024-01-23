@@ -32,9 +32,6 @@ runs:
         distribution: "zulu"
         java-version: "17"
 
-    - name: Gradle cache
-      uses: gradle/gradle-build-action@v2
-
     - name: Run Unit tests
       if: ${{ inputs.unit_test == 'true' }}
       run: ./gradlew test
@@ -51,9 +48,7 @@ runs:
     - name: Run Instrumented tests
       uses: reactivecircus/android-emulator-runner@v2
       if: ${{ inputs.instrumented_test == 'true' }}
-      continue-on-error: true
       with:
-        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         api-level: 29
         script: ./gradlew connectedCheck
 

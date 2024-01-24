@@ -78,7 +78,7 @@ runs:
         disable-animations: true
         api-level: 29
         # script: ./gradlew connectedCheck
-        script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t adb uninstall && ./gradlew connectedCheck
+        script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall && ./gradlew connectedCheck
 
     - name: Get JUnit results
       id: get_junit_results

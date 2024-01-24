@@ -77,7 +77,8 @@ runs:
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
         api-level: 29
-        script: ./gradlew connectedCheck
+        # script: ./gradlew connectedCheck
+        script: adb uninstall com.betrybe.sociallogin.test && ./gradlew connectedCheck
 
     - name: Get JUnit results
       id: get_junit_results

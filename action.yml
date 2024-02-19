@@ -32,9 +32,6 @@ runs:
         distribution: "zulu"
         java-version: "17"
 
-    - name: Gradle cache
-      uses: gradle/gradle-build-action@v2
-
     - name: Run Unit tests
       if: ${{ inputs.unit_test == 'true' }}
       run: ./gradlew test

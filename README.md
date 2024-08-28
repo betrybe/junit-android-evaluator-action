@@ -8,6 +8,8 @@ Projeto em javascript responsável por processar os relatórios(xml) de testes u
   - `unit_test`: Variável responsável por determinar  a execução dos testes unitários. **`default: true`**
   - `instrumented_test`:  Variável responsável por determinar a execução dos testes instrumentados. **`default: false`**
   - `pr_author_username`: Nome do autor do pull request.
+  - `skin`: Tamanho da resolução da tela. **`default: 1080x1920`** Opcional
+  - `density`: Dimensão de pixel. **`default: 440`** Opcional
 
 ## Output 
   - ```result```

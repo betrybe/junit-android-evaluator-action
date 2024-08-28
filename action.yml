@@ -16,6 +16,10 @@ inputs:
     description: "Screen resolution"
     required: false
     default: "1080x1920"
+  density:
+    description: "Density"
+    required: false
+    default: "440"
 
 outputs:
   result:
@@ -55,7 +59,7 @@ runs:
       with:
         api-level: 29
         force-avd-creation: false
-        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }} -density ${{ inputs.density }}
         disable-animations: false
         script: echo "Generated AVD snapshot for caching."
 
@@ -78,7 +82,7 @@ runs:
       continue-on-error: true
       with:
         force-avd-creation: false
-        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }} -density ${{ inputs.density }}
         disable-animations: true
         api-level: 29
         # script: ./gradlew connectedCheck

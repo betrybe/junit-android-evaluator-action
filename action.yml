@@ -12,6 +12,10 @@ inputs:
   pr_author_username:
     description: "Pull Request author username"
     required: true
+  device:
+    description: "Hardware profile used for creating the AVD - e.g. Nexus 6. For a list of all profiles available, run avdmanager list device"
+    required: false
+    default: "Pixel 4"
 
 outputs:
   result:
@@ -51,7 +55,7 @@ runs:
       with:
         api-level: 29
         force-avd-creation: false
-        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -device "${{ inputs.device }}"
         disable-animations: false
         script: echo "Generated AVD snapshot for caching."
 

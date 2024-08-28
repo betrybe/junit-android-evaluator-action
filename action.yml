@@ -12,10 +12,6 @@ inputs:
   pr_author_username:
     description: "Pull Request author username"
     required: true
-  profile:
-    description: "Hardware profile used for creating the AVD - e.g. Nexus 6. For a list of all profiles available, run avdmanager list device"
-    required: false
-    default: "Pixel 4"
   skin:
     description: "Screen resolution"
     required: false
@@ -59,7 +55,6 @@ runs:
       with:
         api-level: 29
         force-avd-creation: false
-        # profile: ${{ inputs.profile }}
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
         disable-animations: false
         script: echo "Generated AVD snapshot for caching."
@@ -83,7 +78,7 @@ runs:
       continue-on-error: true
       with:
         force-avd-creation: false
-        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
         disable-animations: true
         api-level: 29
         # script: ./gradlew connectedCheck

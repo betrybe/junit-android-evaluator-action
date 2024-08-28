@@ -16,6 +16,10 @@ inputs:
     description: "Hardware profile used for creating the AVD - e.g. Nexus 6. For a list of all profiles available, run avdmanager list device"
     required: false
     default: "Pixel 4"
+  skin:
+    description: "Screen resolution"
+    required: false
+    default: "1080x1920"
 
 outputs:
   result:
@@ -55,8 +59,8 @@ runs:
       with:
         api-level: 29
         force-avd-creation: false
-        profile: ${{ inputs.profile }}
-        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        # profile: ${{ inputs.profile }}
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
         disable-animations: false
         script: echo "Generated AVD snapshot for caching."
 

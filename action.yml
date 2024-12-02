@@ -16,10 +16,6 @@ inputs:
     description: "Screen resolution"
     required: false
     default: "1080x1920"
-  density:
-    description: "Density"
-    required: false
-    default: "440"
 
 outputs:
   result:

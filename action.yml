@@ -82,7 +82,7 @@ runs:
       continue-on-error: true
       with:
         force-avd-creation: false
-        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }} -density ${{ inputs.density }}
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }} 
         disable-animations: true
         api-level: 29
         # script: ./gradlew connectedCheck

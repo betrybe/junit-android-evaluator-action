@@ -26,7 +26,16 @@ function runStepsEvaluator(pathList) {
     const testCases = pathFiles.map((pathFile) => {
       return buildTestCaseList(pathFile.path, pathFile.files)
     }).reduce((acc, testType) => acc.concat(testType), [])
-    
+
+    if (testCases.length === 0) {
+      throw new Error(
+        '💥 Os relatórios XML foram gerados sem nenhum <testcase>. ' +
+        'Isso geralmente indica que o app ou o emulador crashou antes de concluir os testes ' +
+        '(falha de infraestrutura, e não do código avaliado). ' +
+        'Re-execute o workflow e, se o problema persistir, verifique o logcat no log do passo de testes.'
+      )
+    }
+
     const testCasesJSON = convertTestCasesToJSON(testCases)
     const testCasesInBase64 = convertTestCasesToBase64(testCasesJSON) 
     
@@ -85,16 +94,19 @@ function generateEvaluations(testCases) {
 }
   
 function mapValuesTestSuite(obj) {
-  return { 
-    name: obj.testsuite.$.name, 
-    tests: obj.testsuite.$.tests, 
+  if (!obj || !obj.testsuite || !obj.testsuite.$) {
+    throw new Error('📭 Relatório XML em formato inesperado: nó <testsuite> não encontrado.')
+  }
+  return {
+    name: obj.testsuite.$.name,
+    tests: obj.testsuite.$.tests,
     skipped: obj.testsuite.$.skipped,
     failures: obj.testsuite.$.failures,
     errors: obj.testsuite.$.errors,
     timestamp: obj.testsuite.$.timestamp,
     hostname: obj.testsuite.$.hostname,
     time: obj.testsuite.$.time,
-    testcase: mapTestCase(obj.testsuite.testcase)
+    testcase: mapTestCase(obj.testsuite.testcase || [])
   }
 }
 
@@ -110,5 +122,7 @@ function mapTestCase(testCase) {
 }
 
 module.exports = {
-  runStepsEvaluator
+  runStepsEvaluator,
+  mapValuesTestSuite,
+  generateEvaluations
 }

@@ -84,6 +84,33 @@ runs:
         # script: ./gradlew connectedCheck
         script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall && ./gradlew connectedCheck
 
+    # Quando o app ou o emulador crasha antes de concluir qualquer teste, o relatório
+    # XML é gerado sem nenhum <testcase>. Nesse caso (falha de infraestrutura, não do
+    # código avaliado) os testes instrumentados são executados mais uma vez.
+    - name: Check Instrumented tests results
+      id: check_instrumented_results
+      if: ${{ inputs.instrumented_test == 'true' }}
+      shell: bash
+      run: |
+        if grep -rlq "<testcase" app/build/outputs/androidTest-results/connected/ 2>/dev/null; then
+          echo "has_testcases=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_testcases=false" >> "$GITHUB_OUTPUT"
+          echo "::warning::Nenhum <testcase> encontrado nos relatórios dos testes instrumentados (provável crash do app ou do emulador). Executando nova tentativa."
+          rm -rf app/build/outputs/androidTest-results/connected
+        fi
+
+    - name: Run Instrumented tests (retry)
+      uses: reactivecircus/android-emulator-runner@v2
+      if: ${{ inputs.instrumented_test == 'true' && steps.check_instrumented_results.outputs.has_testcases == 'false' }}
+      continue-on-error: true
+      with:
+        force-avd-creation: false
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
+        disable-animations: true
+        api-level: 29
+        script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall && ./gradlew connectedCheck
+
     - name: Get JUnit results
       id: get_junit_results
       run: node $GITHUB_ACTION_PATH/dist/index.js

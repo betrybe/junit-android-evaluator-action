@@ -82,7 +82,7 @@ runs:
         disable-animations: true
         api-level: 29
         # script: ./gradlew connectedCheck
-        script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall && ./gradlew connectedCheck
+        script: adb shell pm list packages | grep -E 'com\.betrybe|com\.example' | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall; ./gradlew connectedCheck
 
     # Quando o app ou o emulador crasha antes de concluir qualquer teste, o relatório
     # XML é gerado sem nenhum <testcase>. Nesse caso (falha de infraestrutura, não do
@@ -109,7 +109,7 @@ runs:
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -skin ${{ inputs.skin }}
         disable-animations: true
         api-level: 29
-        script: adb shell pm list packages com.betrybe | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall && ./gradlew connectedCheck
+        script: adb shell pm list packages | grep -E 'com\.betrybe|com\.example' | cut -d ':' -f 2 | tr -d '\r' | xargs -L1 -t -r adb uninstall; ./gradlew connectedCheck
 
     - name: Get JUnit results
       id: get_junit_results
